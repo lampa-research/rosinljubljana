@@ -23,5 +23,6 @@
 #define VBAT 33   //*< Battery monitoring */
 #define IL 34     //*< Left motor current */
 #define IR 35     //*< Right motor current */
+#define XX 0
 
 #endif
