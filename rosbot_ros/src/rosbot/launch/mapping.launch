@@ -1,0 +1,9 @@
+<launch>
+    <node name="rosserial_server" pkg="rosserial_server" type="socket_node" output="screen"/>
+    <node name="message_info_service" pkg="rosserial_python" type="message_info_service.py" output="screen"/>
+    <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui" output="screen"/>
+    <node name="teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" output="screen"/>
+    <node name="lidartf" pkg="tf" type="static_transform_publisher" args="0.054 0 0 0 0 0 1 base_link scan 100" output="screen"/>
+    <node name="odom2tf" pkg="rosbot" type="odom2tf" output="screen"/>
+    <node name="gmapping" pkg="gmapping" type="slam_gmapping" output="screen"/>
+</launch>

@@ -1,2 +1,5 @@
 rosbot_core/.vscode/extensions.json
 rosbot_core/src/WiFiDetails.h
+
+rosbot_ros/build
+rosbot_ros/devel
