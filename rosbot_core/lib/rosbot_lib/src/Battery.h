@@ -11,17 +11,9 @@
 class Battery
 {
 public:
-    /**
-     * @brief Construct a new Battery object.
-     * 
-     */
     Battery();
-    /**
-     * @brief Returns the current battery voltage.
-     * The normal range for battery voltage is between 3.7V and 4.2V.
-     * @return float Current battery voltage.
-     */
     float getVoltage();
+    float getAverageVoltage(uint32_t ms);
 
 private:
 };

@@ -4,6 +4,10 @@
 #include "Arduino.h"
 #include "Pinout.h"
 
+/**
+ * @brief Button class.
+ * 
+ */
 class Button
 {
 public:

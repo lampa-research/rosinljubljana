@@ -4,10 +4,14 @@
 #include "Arduino.h"
 #include "Pinout.h"
 
-class LED
+/**
+ * @brief Led class.
+ * 
+ */
+class Led
 {
 public:
-    LED();
+    Led();
     void on();
     void off();
 
