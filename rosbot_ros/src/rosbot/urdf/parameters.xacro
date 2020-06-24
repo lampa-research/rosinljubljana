@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot name="triglav" 
+    xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- CYLINDER INERTIA -->
+    <xacro:macro name="cylinder_inertia" params="mass r l">
+        <inertia ixx="${mass*(3*r*r+l*l)/12}" ixy = "0" ixz = "0" iyy="${mass*(3*r*r+l*l)/12}" iyz = "0" izz="${mass*(r*r)/2}" />
+    </xacro:macro>
+    <!-- BOX INERTIA -->
+    <xacro:macro name="box_inertia" params="mass x y z">
+        <inertia ixx="${mass*(y*y+z*z)/12}" ixy = "0" ixz = "0" iyy="${mass*(x*x+z*z)/12}" iyz = "0" izz="${mass*(x*x+y*y)/12}" />
+    </xacro:macro>
+    <!-- BASE INERTIA -->
+    <xacro:property name="base_mass" value="0.150" />
+    <xacro:property name="base_size_x" value="0.10" />
+    <xacro:property name="base_size_y" value="0.08" />
+    <xacro:property name="base_size_z" value="0.01" />
+    <!-- CASTER COLLISION -->
+    <xacro:property name="caster_kp" value="10000000" />
+    <xacro:property name="caster_kd" value="1.0" />
+    <xacro:property name="caster_mu" value="0.0" />
+    <xacro:property name="caster_mu2" value="0.0" />
+    <xacro:property name="caster_slip1" value="1.0" />
+    <xacro:property name="caster_slip2" value="1.0" />
+    <!-- WHEEL INERTIA -->
+    <xacro:property name="wheel_mass" value="0.100" />
+    <xacro:property name="wheel_radius" value="0.016" />
+    <xacro:property name="wheel_width" value="0.006" />
+    <!-- WHEEL COLLISION -->
+    <xacro:property name="wheel_kp" value="10000000" />
+    <xacro:property name="wheel_kd" value="1.0" />
+    <xacro:property name="wheel_mu" value="1.0" />
+    <xacro:property name="wheel_mu2" value="1.0" />
+    <xacro:property name="wheel_slip1" value="0.0" />
+    <xacro:property name="wheel_slip2" value="0.0" />
+    <!-- WHEEL JOINT -->
+    <xacro:property name="motor_damping" value="0.000" />
+    <xacro:property name="motor_friction" value="0.00000" />
+</robot>
