@@ -2,20 +2,21 @@
 #define ROBOT_H
 
 #include "Arduino.h"
-#include "Pinout.h"
 #include "Battery.h"
 #include "Button.h"
 #include "Buzzer.h"
+#include "Constants.h"
+#include "EEPROMInterface.h"
 #include "Led.h"
 #include "Lidar.h"
 #include "Motor.h"
-
-#define WHEELBASE 0.0825
+#include "Pinout.h"
 
 class Robot
 {
 public:
     Robot();
+    EEPROMInterface eeprom = EEPROMInterface();
     Battery battery = Battery();
     Button button = Button();
     Buzzer buzzer = Buzzer();
@@ -25,17 +26,24 @@ public:
     Motor motor_right = Motor();
 
     void spinOnce();
+
     void setSpeed(float speed_linear, float speed_angular);
-    float speed_linear = 0.0;
-    float speed_angular = 0.0;
-    float position_x = 0.0;
-    float position_y = 0.0;
-    float orientation_z = 0.0;
+    void refreshSpeed();
+    void refreshPosition();
+    float getRotation();
+    float getPositionX();
+    float getPositionY();
+    float getSpeedAngular();
+    float getSpeedLinear();
+    void initSerialCommunication();
+    void checkSerialCommunication();
 
 private:
-    float _speed_linear_ref = 0.0;
-    float _speed_angular_ref = 0.0;
-    ulong _last_update = 0;
+    float _rotation_z = 0.0f;
+    float _position_x = 0.0f;
+    float _position_y = 0.0f;
+    float _speed_linear = 0.0f;
+    float _speed_angular = 0.0f;
 };
 
 extern Robot robot;

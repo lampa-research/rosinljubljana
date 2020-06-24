@@ -20,7 +20,7 @@ float Battery::getVoltage()
 }
 
 /**
- * @brief Returns the battery voltage, averages over a specified period.
+ * @brief Returns the battery voltage, averaged over a specified period.
  * 
  * @param ms Period in milliseconds.
  * @return float Average battery voltage.

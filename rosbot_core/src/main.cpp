@@ -1,19 +1,15 @@
 #include <Robot.h>
 
 #include <WiFi.h>
-#include <WiFiDetails.h>
 
-#include <ros.h>
-#include <std_msgs/Header.h>
-#include <sensor_msgs/BatteryState.h>
 #include <geometry_msgs/Twist.h>
-#include <std_msgs/Float32.h>
+#include <nav_msgs/Odometry.h>
+#include <ros.h>
+#include <sensor_msgs/BatteryState.h>
 #include <sensor_msgs/LaserScan.h>
 #include <std_msgs/Bool.h>
-#include <nav_msgs/Odometry.h>
-
-const char *ssid = SSID;         /**< Defined in WiFiDetails.h */
-const char *password = PASSWORD; /**< Defined in WiFiDetails.h */
+#include <std_msgs/Float32.h>
+#include <std_msgs/Header.h>
 
 ros::NodeHandle nh;
 
@@ -29,36 +25,6 @@ void twistCb(const geometry_msgs::Twist &msg)
     robot.setSpeed(msg.linear.x, msg.angular.z);
 }
 
-void leftKpCb(const std_msgs::Float32 &msg)
-{
-    robot.motor_left.setSpeedKp(msg.data);
-}
-
-void leftKiCb(const std_msgs::Float32 &msg)
-{
-    robot.motor_left.setSpeedKi(msg.data);
-}
-
-void leftKdCb(const std_msgs::Float32 &msg)
-{
-    robot.motor_left.setSpeedKd(msg.data);
-}
-
-void rightKpCb(const std_msgs::Float32 &msg)
-{
-    robot.motor_right.setSpeedKp(msg.data);
-}
-
-void rightKiCb(const std_msgs::Float32 &msg)
-{
-    robot.motor_right.setSpeedKi(msg.data);
-}
-
-void rightKdCb(const std_msgs::Float32 &msg)
-{
-    robot.motor_right.setSpeedKd(msg.data);
-}
-
 bool lidar_started = false;
 
 void lidarCb(const std_msgs::Bool &msg)
@@ -67,17 +33,19 @@ void lidarCb(const std_msgs::Bool &msg)
 }
 
 ros::Subscriber<geometry_msgs::Twist> twist_sub("/cmd_vel", &twistCb);
-ros::Subscriber<std_msgs::Float32> left_kp_sub("/left_motor/kp", &leftKpCb);
-ros::Subscriber<std_msgs::Float32> left_ki_sub("/left_motor/ki", &leftKiCb);
-ros::Subscriber<std_msgs::Float32> left_kd_sub("/left_motor/kd", &leftKdCb);
-ros::Subscriber<std_msgs::Float32> right_kp_sub("/right_motor/kp", &rightKpCb);
-ros::Subscriber<std_msgs::Float32> right_ki_sub("/right_motor/ki", &rightKiCb);
-ros::Subscriber<std_msgs::Float32> right_kd_sub("/right_motor/kd", &rightKdCb);
 ros::Subscriber<std_msgs::Bool> lidar_sub("/lidar", &lidarCb);
 
 void setup()
 {
-    WiFi.begin(ssid, password);
+    robot.initSerialCommunication();
+    robot.buzzer.beep(440, 200);
+    while (!robot.button.pressed())
+    {
+        robot.checkSerialCommunication();
+    }
+    robot.buzzer.beep(440, 200);
+
+    WiFi.begin(robot.eeprom.getSSID().c_str(), robot.eeprom.getPASS().c_str());
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
@@ -86,7 +54,20 @@ void setup()
     Serial.print("Connected to the WiFi network. IP: ");
     Serial.println(WiFi.localIP());
 
-    IPAddress server(192, 168, 2, 136);
+    int ros_ip[4] = {0, 0, 0, 0};
+    int i = 0;
+    String s = robot.eeprom.getROSMaster();
+    char delimiter = '.';
+    size_t pos = 0;
+    String token;
+    while ((pos = s.indexOf(delimiter)) != std::string::npos)
+    {
+        token = s.substring(0, pos);
+        ros_ip[i++] = token.toInt();
+        s = s.substring(pos + 1);
+    }
+    ros_ip[i] = s.toInt();
+    IPAddress server(ros_ip[0], ros_ip[1], ros_ip[2], ros_ip[3]);
     const uint16_t serverPort = 11411;
     nh.getHardware()->setConnection(server, serverPort);
     nh.initNode();
@@ -95,17 +76,11 @@ void setup()
     nh.advertise(odometry_pub);
 
     nh.subscribe(twist_sub);
-    nh.subscribe(left_kp_sub);
-    nh.subscribe(left_ki_sub);
-    nh.subscribe(left_kd_sub);
-    nh.subscribe(right_kp_sub);
-    nh.subscribe(right_ki_sub);
-    nh.subscribe(right_kd_sub);
     nh.subscribe(lidar_sub);
 
     laserscan_msg.ranges_length = 180;
     laserscan_msg.intensities_length = 0;
-    laserscan_msg.header.frame_id = "scan";
+    laserscan_msg.header.frame_id = "lidar_link";
     laserscan_msg.range_min = 0.08;
     laserscan_msg.range_max = 0.33;
     laserscan_msg.time_increment = 0.010;
@@ -136,7 +111,7 @@ void loop()
     {
         loop_time = current_time;
         int current_position = robot.lidar.currentPosition();
-        float distance = robot.lidar.getDistanceAverage(100);
+        float distance = robot.lidar.getDistanceAverage(50);
         robot.lidar.nextPosition(1);
         if (sweep_dir)
         {
@@ -163,7 +138,6 @@ void loop()
             }
             sweep_dir = !sweep_dir;
             laserscan_msg.header.stamp = nh.now();
-
             laserscan_pub.publish(&laserscan_msg);
         }
     }
@@ -177,14 +151,14 @@ void loop()
         battery_pub.publish(&battery_msg);
 
         odometry_msg.header.stamp = nh.now();
-        odometry_msg.pose.pose.position.x = robot.position_x;
-        odometry_msg.pose.pose.position.y = robot.position_y;
-        odometry_msg.pose.pose.orientation.w = cos(0.5 * robot.orientation_z);
+        odometry_msg.pose.pose.position.x = robot.getPositionX();
+        odometry_msg.pose.pose.position.y = robot.getPositionY();
+        odometry_msg.pose.pose.orientation.w = cos(0.5 * robot.getRotation());
         odometry_msg.pose.pose.orientation.x = 0;
         odometry_msg.pose.pose.orientation.y = 0;
-        odometry_msg.pose.pose.orientation.z = sin(0.5 * robot.orientation_z);
-        odometry_msg.twist.twist.linear.x = robot.speed_linear;
-        odometry_msg.twist.twist.angular.z = robot.speed_angular;
+        odometry_msg.pose.pose.orientation.z = sin(0.5 * robot.getRotation());
+        odometry_msg.twist.twist.linear.x = robot.getSpeedLinear();
+        odometry_msg.twist.twist.angular.z = robot.getSpeedAngular();
         odometry_pub.publish(&odometry_msg);
     }
 
