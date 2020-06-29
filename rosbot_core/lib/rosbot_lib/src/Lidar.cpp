@@ -22,10 +22,20 @@ int Lidar::currentPosition()
 }
 
 /**
+ * @brief Set fixed servo position.
+ * 
+ * @param angle Angle to rotate to, in degrees 0-180.
+ */
+void Lidar::setPosition(int angle)
+{
+    ledcWrite(SERVO_CH, _usToDuty(_angleToUs(angle)));
+}
+
+/**
  * @brief Rotates the servo for a perscribed angle.
  * The units of the angle (step) are degrees. 
  * 
- * @param step Angle to rotate, in degrees.
+ * @param step Angle to rotate, in degrees 0-180.
  */
 void Lidar::nextPosition(int step)
 {

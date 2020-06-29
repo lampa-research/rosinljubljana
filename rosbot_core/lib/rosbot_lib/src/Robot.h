@@ -9,6 +9,7 @@
 #include "EEPROMInterface.h"
 #include "Led.h"
 #include "Lidar.h"
+#include "IMU.h"
 #include "Motor.h"
 #include "Pinout.h"
 
@@ -21,7 +22,8 @@ public:
     Button button = Button();
     Buzzer buzzer = Buzzer();
     Led led = Led();
-    Lidar lidar = Lidar();
+    Lidar lidar = Lidar();    
+    Imu imu = Imu();
     Motor motor_left = Motor();
     Motor motor_right = Motor();
 
