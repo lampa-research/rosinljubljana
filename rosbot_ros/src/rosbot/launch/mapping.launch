@@ -1,9 +1,47 @@
 <launch>
+    <!-- COMMUNICATION -->
     <node name="rosserial_server" pkg="rosserial_server" type="socket_node" output="screen"/>
     <node name="message_info_service" pkg="rosserial_python" type="message_info_service.py" output="screen"/>
-    <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui" output="screen"/>
-    <node name="teleop" pkg="mouse_teleop" type="mouse_teleop.py" output="screen"/>
-    <node name="lidartf" pkg="tf" type="static_transform_publisher" args="0.054 0 0 0 0 0 1 base_link lidar_link 100" output="screen"/>
+    <!-- TELEOP -->
+    <remap from="mouse_vel" to="cmd_vel"/>
+    <node name="mouse_teleop" pkg="mouse_teleop" type="mouse_teleop.py" output="screen"/>
+    <!-- TF SETUP -->
+    <node name="basetf" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 odom base_link 200" output="screen"/>
+    <node name="lidartf" pkg="tf" type="static_transform_publisher" args="0.054 0 0 0 0 0 1 base_link lidar_link 200" output="screen"/>
+    <node name="imutf" pkg="tf" type="static_transform_publisher" args="0.080 0 0 0 0 0 1 base_link imu_link 200" output="screen"/>
     <node name="odom2tf" pkg="rosbot" type="odom2tf" output="screen"/>
-    <node name="gmapping" pkg="gmapping" type="slam_gmapping" output="screen"/>
+    <!-- MAPPING SETUP -->
+    <node name="gmapping" pkg="gmapping" type="slam_gmapping" output="screen">
+        <param name="map_update_interval" value="0.5"/>
+        <param name="maxUrange" value="16.0"/>
+        <param name="sigma" value="0.05"/>
+        <param name="kernelSize" value="1"/>
+        <param name="lstep" value="0.05"/>
+        <param name="astep" value="0.05"/>
+        <param name="iterations" value="5"/>
+        <param name="lsigma" value="0.075"/>
+        <param name="ogain" value="3.0"/>
+        <param name="lskip" value="0"/>
+        <param name="srr" value="0.01"/>
+        <param name="srt" value="0.02"/>
+        <param name="str" value="0.01"/>
+        <param name="stt" value="0.02"/>
+        <param name="linearUpdate" value="0.01"/>
+        <param name="angularUpdate" value="0.01"/>
+        <param name="temporalUpdate" value="-1.0"/>
+        <param name="resampleThreshold" value="0.5"/>
+        <param name="particles" value="10"/>
+        <param name="xmin" value="-1.0"/>
+        <param name="ymin" value="-1.0"/>
+        <param name="xmax" value="1.0"/>
+        <param name="ymax" value="1.0"/>
+        <param name="delta" value="0.01"/>
+        <param name="llsamplerange" value="0.01"/>
+        <param name="llsamplestep" value="0.01"/>
+        <param name="lasamplerange" value="0.005"/>
+        <param name="lasamplestep" value="0.005"/>
+    </node>
+    <!-- GUI -->
+    <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui" output="screen" args = "--perspective-file $(find rosbot)/cfg/rqt_gui.perspective"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rosbot)/cfg/mapping.rviz" output="screen"/>
 </launch>

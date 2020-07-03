@@ -22,12 +22,14 @@ void IRAM_ATTR ISR_R_B()
 
 Robot::Robot()
 {
-
+    Serial.begin(115200);
     pinMode(LED, OUTPUT);
     digitalWrite(LED, HIGH);
 
     motor_left.init(LEFT, true, &ISR_L_A, &ISR_L_B);
     motor_right.init(RIGHT, false, &ISR_R_A, &ISR_R_B);
+
+    //imu.setup();
 }
 
 void Robot::spinOnce()
@@ -106,8 +108,8 @@ void Robot::refreshPosition()
             L_count--;
             _rotation_z = _rotation_z - ROBOT_ROTATION_INCREMENT * dir_L;
             float rotation_mid = _rotation_z + ROBOT_ROTATION_INCREMENT / 2.0 * dir_L;
-            dX = cos(rotation_mid) * (-ROBOT_TRANSLATION_INCREMENT) * dir_L;
-            dY = sin(rotation_mid) * (-ROBOT_TRANSLATION_INCREMENT) * dir_L;
+            dX = cos(rotation_mid) * (ROBOT_TRANSLATION_INCREMENT) * dir_L;
+            dY = sin(rotation_mid) * (ROBOT_TRANSLATION_INCREMENT) * dir_L;
             _position_x = _position_x + dX;
             _position_y = _position_y + dY;
         }
@@ -142,8 +144,8 @@ void Robot::checkSerialCommunication()
         if (c == '#')
         {
             Serial.flush();
-
             robot.eeprom.setup();
+            Serial.println("\nPress # to enter setup or ? to print saved setup.\nPress USER button to continue.\n");
         }
         else if (c == '?')
         {
@@ -158,13 +160,13 @@ void Robot::checkSerialCommunication()
             Serial.print("Server IP: ");
             Serial.println(robot.eeprom.getROSMaster());
             Serial.flush();
+            Serial.println("\nPress # to enter setup or ? to print saved setup.\nPress USER button to continue.\n");
         }
     }
 }
 
 void Robot::initSerialCommunication()
 {
-    Serial.begin(115200);
     delay(1000);
     for (int i = 0; i < 10; i++)
     {
@@ -172,6 +174,7 @@ void Robot::initSerialCommunication()
     }
     Serial.println("\n*** Welcome to ROSin Ljubljana. ***\n");
     eeprom.init();
+    Serial.println("\nPress # to enter setup or ? to print saved setup.\nPress USER button to continue.\n");
 }
 
 Robot robot = Robot();

@@ -27,7 +27,6 @@ void EEPROMInterface::init()
     {
         Serial.println("\n\nERROR: Failed to initialise EEPROM.\n\n");
     }
-    Serial.println("\nPress # to enter setup or ? to print saved setup.\n");
 }
 
 /**

@@ -1,6 +1,7 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
+#include <Wire.h>
 #include "Arduino.h"
 #include "Battery.h"
 #include "Button.h"
@@ -23,7 +24,7 @@ public:
     Buzzer buzzer = Buzzer();
     Led led = Led();
     Lidar lidar = Lidar();    
-    Imu imu = Imu();
+    // Imu imu = Imu();
     Motor motor_left = Motor();
     Motor motor_right = Motor();
 

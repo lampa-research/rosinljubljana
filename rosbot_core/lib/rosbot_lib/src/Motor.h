@@ -57,7 +57,7 @@ private:
     float _speed_ref = 0.0f;
     float _speed = 0.0f; // m/s
     float _kp = 10.0f;
-    float _ki = 50.0f;
+    float _ki = 100.0f;
     float _kd = 0.001f;
 
     float _error_integral = 0.0f;

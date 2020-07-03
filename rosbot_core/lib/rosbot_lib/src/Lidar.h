@@ -16,7 +16,7 @@ public:
     float getDistanceAverage(int measurements);
     void setPosition(int angle);
     int currentPosition();
-    void nextPosition(int step = 1);
+    void nextPosition(int step);
 
 private:
     int _usToDuty(int us) { return map(us, 0, 20000, 0, 65535); }

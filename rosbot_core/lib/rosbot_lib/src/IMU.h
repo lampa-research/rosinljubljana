@@ -1,147 +1,90 @@
-/* ============================================
-I2Cdev device library code is placed under the MIT license
-Copyright (c) 2012 Jeff Rowberg
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-===============================================
-*/
 #ifndef IMU_H
 #define IMU_H
 
 #include "Arduino.h"
-#include "Pinout.h"
+#include "Wire.h"
 
-#include <Wire.h>
+#define MPU6050_ADDR 0x68
+#define MPU6050_SMPLRT_DIV 0x19
+#define MPU6050_CONFIG 0x1a
+#define MPU6050_GYRO_CONFIG 0x1b
+#define MPU6050_ACCEL_CONFIG 0x1c
+#define MPU6050_WHO_AM_I 0x75
+#define MPU6050_PWR_MGMT_1 0x6b
+#define MPU6050_TEMP_H 0x41
+#define MPU6050_TEMP_L 0x42
 
-
-/**
- * @brief IMU class.
- * 
- */
-class Imu
+class MPU6050
 {
 public:
-    Imu();
+    MPU6050(TwoWire &w);
+    MPU6050(TwoWire &w, float aC, float gC);
 
-    void Calibrrate(); // offsets are saved to the imu
+    void begin();
 
-    void getMotion6(float* ax_ms2, float* ay_ms2, float* az_ms2, float* gx_rads, float* gy_rads, float* gz_rads);
+    void setGyroOffsets(float x, float y, float z);
 
-    void getMotion6Raw(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz);
-    void getAccelerationRaw(int16_t* x, int16_t* y, int16_t* z);
-    int16_t getAccelerationXRaw();
-    int16_t getAccelerationYRaw();
-    int16_t getAccelerationZRaw();
+    void writeMPU6050(byte reg, byte data);
+    byte readMPU6050(byte reg);
 
-    float getTemperature();
+    int16_t getRawAccX() { return rawAccX; };
+    int16_t getRawAccY() { return rawAccY; };
+    int16_t getRawAccZ() { return rawAccZ; };
 
-    void getRotationRaw(int16_t* x, int16_t* y, int16_t* z);
-    int16_t getRotationXRaw();
-    int16_t getRotationYRaw();
-    int16_t getRotationZRaw();
+    int16_t getRawTemp() { return rawTemp; };
 
-private: 
-    char LBRACKET = '[';
-    char RBRACKET = ']';
-    char COMMA    = ',';
-    char BLANK    = ' ';
-    char PERIOD   = '.';
+    int16_t getRawGyroX() { return rawGyroX; };
+    int16_t getRawGyroY() { return rawGyroY; };
+    int16_t getRawGyroZ() { return rawGyroZ; };
 
-    int iAx = 0;
-    int iAy = 1;
-    int iAz = 2;
-    int iGx = 3;
-    int iGy = 4;
-    int iGz = 5;
+    float getTemp() { return temp; };
 
-    int usDelay = 3150;   // empirical, to hold sampling to 200 Hz
-    int NFast =  1000;    // the bigger, the better (but slower)
-    int NSlow = 10000;    // ..
-    int LinesBetweenHeaders = 5;
-    int LowValue[6];
-    int HighValue[6];
-    int Smoothed[6];
-    int LowOffset[6];
-    int HighOffset[6];
-    int Target[6];
-    int LinesOut;
-    int N;
+    float getAccX() { return accX; };
+    float getAccY() { return accY; };
+    float getAccZ() { return accZ; };
 
-    void _SetOffsets(int TheOffsets[6]);
-    void _PullBracketsIn();
-    void _PullBracketsOut();
-    void _ShowProgress();
-    void _SetAveraging(int NewN);
-    void _GetSmoothed();
-    void _ForceHeader();
+    float getGyroX() { return gyroX; };
+    float getGyroY() { return gyroY; };
+    float getGyroZ() { return gyroZ; };
 
-    //
-    //      MPU6050 lib
-    //
-    uint8_t devAddr = 0x68;
-    uint8_t buffer[14];
-    void _initialize();
-    void _setClockSource(uint8_t source);
-    void _setFullScaleGyroRange(uint8_t range);
-    void _setFullScaleAccelRange(uint8_t range);
-    void _setSleepEnabled(bool enabled);
-    bool _testConnection();
-    uint8_t _getDeviceID();
+    void calcGyroOffsets(bool console = false, uint16_t delayBefore = 1000, uint16_t delayAfter = 3000);
 
-    int16_t _getXAccelOffset();
-    void _setXAccelOffset(int16_t offset);
-    int16_t _getYAccelOffset();
-    void _setYAccelOffset(int16_t offset);
-    int16_t _getZAccelOffset();
-    void _setZAccelOffset(int16_t offset);
-    int16_t _getXGyroOffset();
-    void _setXGyroOffset(int16_t offset);
-    int16_t _getYGyroOffset();
-    void _setYGyroOffset(int16_t offset);
-    int16_t _getZGyroOffset();
-    void _setZGyroOffset(int16_t offset);
+    float getGyroXoffset() { return gyroXoffset; };
+    float getGyroYoffset() { return gyroYoffset; };
+    float getGyroZoffset() { return gyroZoffset; };
 
-    void _CalibrateGyro(uint8_t Loops = 15); // Fine tune after setting offsets with less Loops.
-    void _CalibrateAccel(uint8_t Loops = 15);// Fine tune after setting offsets with less Loops.
-    void _PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops);  // Does the math
-    void _PrintActiveOffsets(); // See the results of the Calibration
-    void _resetFIFO();
-    void _resetDMP();
+    void update();
 
-    // 
-    //      I2Cdev lib
-    //
-    int8_t _readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data, uint16_t timeout=1000);
-    int8_t _readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data, uint16_t timeout=1000);
-    int8_t _readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data, uint16_t timeout=1000);
-    int8_t _readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t *data, uint16_t timeout=1000);
-    int8_t _readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint16_t timeout=1000);
-    int8_t _readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data, uint16_t timeout=1000);
-    int8_t _readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data, uint16_t timeout=1000);
-    int8_t _readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data, uint16_t timeout=1000);
+    float getAccAngleX() { return angleAccX; };
+    float getAccAngleY() { return angleAccY; };
 
-    bool _writeBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t data);
-    bool _writeBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t data);
-    bool _writeBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
-    bool _writeBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t data);
-    bool _writeByte(uint8_t devAddr, uint8_t regAddr, uint8_t data);
-    bool _writeWord(uint8_t devAddr, uint8_t regAddr, uint16_t data);
-    bool _writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
-    bool _writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data);
+    float getGyroAngleX() { return angleGyroX; };
+    float getGyroAngleY() { return angleGyroY; };
+    float getGyroAngleZ() { return angleGyroZ; };
 
+    float getAngleX() { return angleX; };
+    float getAngleY() { return angleY; };
+    float getAngleZ() { return angleZ; };
 
+private:
+    TwoWire *wire;
+
+    int16_t rawAccX, rawAccY, rawAccZ, rawTemp,
+        rawGyroX, rawGyroY, rawGyroZ;
+
+    float gyroXoffset, gyroYoffset, gyroZoffset;
+
+    float temp, accX, accY, accZ, gyroX, gyroY, gyroZ;
+
+    float angleGyroX, angleGyroY, angleGyroZ,
+        angleAccX, angleAccY, angleAccZ;
+
+    float angleX, angleY, angleZ;
+
+    float interval;
+    long preInterval;
+
+    float accCoef, gyroCoef;
 };
+
 #endif
