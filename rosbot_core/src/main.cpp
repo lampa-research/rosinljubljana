@@ -29,26 +29,21 @@ void twistCb(const geometry_msgs::Twist &msg)
 {
     robot.setSpeed(msg.linear.x, msg.angular.z);
 }
-
-bool lidar_started = false;
+ros::Subscriber<geometry_msgs::Twist> twist_sub("/cmd_vel", &twistCb);
 
 void lidarCb(const std_msgs::Bool &msg)
 {
-    lidar_started = msg.data;
+    robot.setLidarStarted(msg.data);
 }
-
-ros::Subscriber<geometry_msgs::Twist> twist_sub("/cmd_vel", &twistCb);
 ros::Subscriber<std_msgs::Bool> lidar_sub("/lidar", &lidarCb);
 
 void setup()
 {
     robot.initSerialCommunication();
-    // robot.buzzer.beep(440, 200);
     while (!robot.button.pressed())
     {
         robot.checkSerialCommunication();
     }
-    // robot.buzzer.beep(440, 200);
 
     WiFi.begin(robot.eeprom.getSSID().c_str(), robot.eeprom.getPASS().c_str());
     while (WiFi.status() != WL_CONNECTED)
@@ -89,14 +84,14 @@ void setup()
     nh.subscribe(twist_sub);
     nh.subscribe(lidar_sub);
 
-    laserscan_msg.ranges_length = 180;
+    laserscan_msg.ranges_length = LIDAR_TOTAL_ANGLE + 1;
     laserscan_msg.intensities_length = 0;
     laserscan_msg.header.frame_id = "lidar_link";
     laserscan_msg.range_min = 0.08;
     laserscan_msg.range_max = 1.00;
-    laserscan_msg.time_increment = 0.02;
+    laserscan_msg.time_increment = 0.01;
     laserscan_msg.scan_time = 0; // laserscan_msg.time_increment * laserscan_msg.ranges_length;
-    laserscan_msg.ranges = (float *)malloc(sizeof(float) * 180);
+    laserscan_msg.ranges = (float *)malloc(sizeof(float) * (LIDAR_TOTAL_ANGLE + 1));
 
     odometry_msg.header.frame_id = "odom";
     odometry_msg.child_frame_id = "base_link";
@@ -125,9 +120,12 @@ void loop()
 {
     robot.spinOnce();
     imu.update();
-    if (robot.getSpeedLinear() < 0.001 && robot.getSpeedAngular() < 0.001 && last_move_time - millis() > 6000)
+    if (robot.getSpeedLinear() < 0.001 && robot.getSpeedAngular() < 0.001)
     {
-        moving = false;
+        if (last_move_time - millis() > 6000)
+        {
+            moving = false;
+        }
     }
     else
     {
@@ -137,11 +135,13 @@ void loop()
 
     ulong current_time = millis();
 
-    if (lidar_started && current_time - loop_time > laserscan_msg.time_increment * 1000)
+    if (robot.lidarStarted() && current_time - loop_time > laserscan_msg.time_increment * 1000)
     {
         loop_time = current_time;
-        int current_position = robot.lidar.currentPosition();
-        float distance = robot.lidar.getDistanceAverage(100);
+        int current_position = robot.lidar.currentPosition() - 90 + LIDAR_TOTAL_ANGLE / 2;
+        Serial.print("Current position: ");
+        Serial.println(current_position);
+        float distance = robot.lidar.getDistanceAverage(64);
         robot.lidar.nextPosition(1);
         if (sweep_dir)
         {
@@ -149,21 +149,21 @@ void loop()
         }
         else
         {
-            laserscan_msg.ranges[179 - current_position] = distance;
+            laserscan_msg.ranges[LIDAR_TOTAL_ANGLE - 1 - current_position] = distance;
         }
-        if ((sweep_dir == 1 && current_position >= 179) || (sweep_dir == 0 && current_position <= 0))
+        if ((sweep_dir == 1 && current_position >= LIDAR_TOTAL_ANGLE - 1) || (sweep_dir == 0 && current_position <= 0))
         {
 
             if (sweep_dir)
             {
-                laserscan_msg.angle_min = -PI / 2.0;
-                laserscan_msg.angle_max = PI / 2.0;
+                laserscan_msg.angle_min = -PI * (float)LIDAR_TOTAL_ANGLE / 360.0 + LIDAR_BIAS;
+                laserscan_msg.angle_max = PI * (float)LIDAR_TOTAL_ANGLE / 360.0 + LIDAR_BIAS;
                 laserscan_msg.angle_increment = PI / 180.0;
             }
             else
             {
-                laserscan_msg.angle_min = PI / 2.0;
-                laserscan_msg.angle_max = -PI / 2.0;
+                laserscan_msg.angle_min = PI * (float)LIDAR_TOTAL_ANGLE / 360.0 - LIDAR_BIAS;
+                laserscan_msg.angle_max = -PI * (float)LIDAR_TOTAL_ANGLE / 360.0 - LIDAR_BIAS;
                 laserscan_msg.angle_increment = -PI / 180.0;
             }
             sweep_dir = !sweep_dir;

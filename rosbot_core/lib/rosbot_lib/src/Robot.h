@@ -23,7 +23,7 @@ public:
     Button button = Button();
     Buzzer buzzer = Buzzer();
     Led led = Led();
-    Lidar lidar = Lidar();    
+    Lidar lidar = Lidar();
     // Imu imu = Imu();
     Motor motor_left = Motor();
     Motor motor_right = Motor();
@@ -41,12 +41,17 @@ public:
     void initSerialCommunication();
     void checkSerialCommunication();
 
+    void setLidarStarted(bool started);
+    bool lidarStarted();
+
 private:
     float _rotation_z = 0.0f;
     float _position_x = 0.0f;
     float _position_y = 0.0f;
     float _speed_linear = 0.0f;
     float _speed_angular = 0.0f;
+
+    bool _lidar_started = false;
 };
 
 extern Robot robot;

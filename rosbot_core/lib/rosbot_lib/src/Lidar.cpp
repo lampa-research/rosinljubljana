@@ -18,7 +18,18 @@ Lidar::Lidar()
  */
 int Lidar::currentPosition()
 {
-    return _usToAngle(_dutyToUs(ledcRead(SERVO_CH)));
+    int position = _usToAngle(_dutyToUs(ledcRead(SERVO_CH)));
+    Serial.print("Position: ");
+    Serial.println(position);
+    if (position < 90 - LIDAR_TOTAL_ANGLE / 2)
+    {
+        position = 90 - LIDAR_TOTAL_ANGLE / 2;
+    }
+    else if (position > 90 + LIDAR_TOTAL_ANGLE / 2)
+    {
+        position = 90 + LIDAR_TOTAL_ANGLE / 2;
+    }
+    return position;
 }
 
 /**
@@ -39,9 +50,9 @@ void Lidar::setPosition(int angle)
  */
 void Lidar::nextPosition(int step)
 {
-    if (_servoVal >= 180)
+    if (_servoVal >= 91 + LIDAR_TOTAL_ANGLE / 2)
         _servoDir = -step;
-    else if (_servoVal <= 0)
+    else if (_servoVal <= 91 - LIDAR_TOTAL_ANGLE / 2)
         _servoDir = +step;
     _servoVal += _servoDir;
     ledcWrite(SERVO_CH, _usToDuty(_angleToUs(_servoVal)));

@@ -11,9 +11,7 @@
 #define ROBOT_ROTATION_INCREMENT (WHEEL_ARC_LENGTH / ROBOT_WHEELBASE)
 #define ROBOT_TRANSLATION_INCREMENT (tan(ROBOT_ROTATION_INCREMENT / 2) * ROBOT_WHEELBASE)
 
-// _increment_robot_rotation_angle_left = -motor_left.increment_wheel_arc_length / ROBOT_WHEELBASE;
-// _increment_robot_rotation_angle_right = motor_right.increment_wheel_arc_length / ROBOT_WHEELBASE;
-// _increment_robot_translation_distance_left = tan(-_increment_robot_rotation_angle_left / 2) * ROBOT_WHEELBASE;
-// _increment_robot_translation_distance_right = tan(_increment_robot_rotation_angle_right / 2) * ROBOT_WHEELBASE;
+#define LIDAR_TOTAL_ANGLE 90
+#define LIDAR_BIAS 0.1
 
 #endif
