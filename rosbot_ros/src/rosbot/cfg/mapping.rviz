@@ -7,6 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /Odometry1/Shape1
+        - /TF1/Frames1
       Splitter Ratio: 0.5
     Tree Height: 565
   - Class: rviz/Selection
@@ -138,15 +139,15 @@ Visualization Manager:
       Enabled: true
       Frame Timeout: 15
       Frames:
-        All Enabled: true
+        All Enabled: false
         base_link:
           Value: true
         imu_link:
-          Value: true
+          Value: false
         lidar_link:
-          Value: true
+          Value: false
         map:
-          Value: true
+          Value: false
         odom:
           Value: true
       Marker Scale: 1

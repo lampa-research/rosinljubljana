@@ -89,17 +89,17 @@ void setup()
     laserscan_msg.header.frame_id = "lidar_link";
     laserscan_msg.range_min = 0.08;
     laserscan_msg.range_max = 1.00;
-    laserscan_msg.time_increment = 0.01;
+    laserscan_msg.time_increment = 0.010;
     laserscan_msg.scan_time = 0; // laserscan_msg.time_increment * laserscan_msg.ranges_length;
     laserscan_msg.ranges = (float *)malloc(sizeof(float) * (LIDAR_TOTAL_ANGLE + 1));
 
     odometry_msg.header.frame_id = "odom";
     odometry_msg.child_frame_id = "base_link";
-    odometry_msg.pose.covariance[0] = 1.0;
-    odometry_msg.pose.covariance[7] = 1.0;
-    odometry_msg.pose.covariance[35] = 1.0;
+    odometry_msg.pose.covariance[0] = 0.01;
+    odometry_msg.pose.covariance[7] = 0.01;
+    odometry_msg.pose.covariance[35] = 0.01;
     odometry_msg.twist.covariance[0] = 0.01;
-    odometry_msg.twist.covariance[35] = 0.10;
+    odometry_msg.twist.covariance[35] = 0.01;
 
     imu_msg.header.frame_id = "imu_link";
     imu_msg.linear_acceleration_covariance[0] = 0.1;
@@ -120,9 +120,9 @@ void loop()
 {
     robot.spinOnce();
     imu.update();
-    if (robot.getSpeedLinear() < 0.001 && robot.getSpeedAngular() < 0.001)
+    if (fabs(robot.getSpeedLinear()) < 0.0001 && fabs(robot.getSpeedAngular()) < 0.0001)
     {
-        if (last_move_time - millis() > 6000)
+        if (last_move_time - millis() > 10000)
         {
             moving = false;
         }
@@ -139,8 +139,6 @@ void loop()
     {
         loop_time = current_time;
         int current_position = robot.lidar.currentPosition() - 90 + LIDAR_TOTAL_ANGLE / 2;
-        Serial.print("Current position: ");
-        Serial.println(current_position);
         float distance = robot.lidar.getDistanceAverage(64);
         robot.lidar.nextPosition(1);
         if (sweep_dir)
@@ -156,14 +154,14 @@ void loop()
 
             if (sweep_dir)
             {
-                laserscan_msg.angle_min = -PI * (float)LIDAR_TOTAL_ANGLE / 360.0 + LIDAR_BIAS;
-                laserscan_msg.angle_max = PI * (float)LIDAR_TOTAL_ANGLE / 360.0 + LIDAR_BIAS;
+                laserscan_msg.angle_min = -PI * (float)LIDAR_TOTAL_ANGLE / 360.0 - LIDAR_BIAS;
+                laserscan_msg.angle_max = PI * (float)LIDAR_TOTAL_ANGLE / 360.0 - LIDAR_BIAS;
                 laserscan_msg.angle_increment = PI / 180.0;
             }
             else
             {
-                laserscan_msg.angle_min = PI * (float)LIDAR_TOTAL_ANGLE / 360.0 - LIDAR_BIAS;
-                laserscan_msg.angle_max = -PI * (float)LIDAR_TOTAL_ANGLE / 360.0 - LIDAR_BIAS;
+                laserscan_msg.angle_min = PI * (float)LIDAR_TOTAL_ANGLE / 360.0 + LIDAR_BIAS;
+                laserscan_msg.angle_max = -PI * (float)LIDAR_TOTAL_ANGLE / 360.0 + LIDAR_BIAS;
                 laserscan_msg.angle_increment = -PI / 180.0;
             }
             sweep_dir = !sweep_dir;

@@ -9,7 +9,7 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     ros::NodeHandle p_nh("~");
 
-    const auto &odom_frame = p_nh.param<std::string>("odom_frame", "odom");
+    const auto &odom_frame = p_nh.param<std::string>("odom_frame", "odom_delayed");
     const auto &base_link_frame = p_nh.param<std::string>("base_link_frame", "base_link");
 
     tf2_ros::TransformBroadcaster tf_broadcast;
@@ -27,7 +27,7 @@ int main(int argc, char **argv)
             tf_broadcast.sendTransform(transform);
         };
 
-    auto sub = nh.subscribe<nav_msgs::Odometry>("odom", 10, callback);
+    auto sub = nh.subscribe<nav_msgs::Odometry>("odom_delayed", 10, callback);
 
     ros::Rate rate(100);
     while (nh.ok())

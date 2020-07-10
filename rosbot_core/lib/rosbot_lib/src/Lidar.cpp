@@ -19,8 +19,6 @@ Lidar::Lidar()
 int Lidar::currentPosition()
 {
     int position = _usToAngle(_dutyToUs(ledcRead(SERVO_CH)));
-    Serial.print("Position: ");
-    Serial.println(position);
     if (position < 90 - LIDAR_TOTAL_ANGLE / 2)
     {
         position = 90 - LIDAR_TOTAL_ANGLE / 2;
