@@ -7,26 +7,30 @@
 #include "Button.h"
 #include "Buzzer.h"
 #include "Constants.h"
-#include "EEPROMInterface.h"
+#include "EEPROM_Interface.h"
 #include "Led.h"
 #include "Lidar.h"
 #include "IMU.h"
 #include "Motor.h"
 #include "Pinout.h"
+#include "Setup.h"
 
 class Robot
 {
 public:
     Robot();
-    EEPROMInterface eeprom = EEPROMInterface();
     Battery battery = Battery();
     Button button = Button();
-    Buzzer buzzer = Buzzer();
+    // Buzzer buzzer = Buzzer();
     Led led = Led();
     Lidar lidar = Lidar();
-    // Imu imu = Imu();
+    IMU imu = IMU();
     Motor motor_left = Motor();
     Motor motor_right = Motor();
+
+    EEPROM_Interface eeprom = EEPROM_Interface();
+    Setup setup = Setup(eeprom, /*buzzer,*/ button, imu);
+    void syncSetup();
 
     void spinOnce();
 
@@ -38,11 +42,13 @@ public:
     float getPositionY();
     float getSpeedAngular();
     float getSpeedLinear();
-    void initSerialCommunication();
-    void checkSerialCommunication();
-
     void setLidarStarted(bool started);
     bool lidarStarted();
+    void setLidarBacklash(float backlash);
+    float getLidarBacklash();
+    void setLidarAngle(int angle);
+    int getLidarAngle();
+    bool isMoving();
 
 private:
     float _rotation_z = 0.0f;
@@ -52,6 +58,8 @@ private:
     float _speed_angular = 0.0f;
 
     bool _lidar_started = false;
+    float _lidar_backlash = 0.06;
+    int _lidar_angle = 90;
 };
 
 extern Robot robot;

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+   
+    <!-- GAZEBO -->
+    <include file="$(find rosbot)/launch/gazebo.launch">
+    </include>
+
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="key_teleop" output="screen"/>
+
+        <!-- run gmapping to map the floor -->
+    <node pkg="gmapping" type="slam_gmapping" name="gmapping" args="scan:=scan _base_frame:=/base_link _odom_frame:=/odom
+ _map_update_interval:=1.0
+_maxUrange:=0.5
+_iterations:=5
+_minimumScore:=600.0
+_linearUpdate:=0.2
+_angularUpdate:=0.1
+_particles:=30
+_delta:=0.05
+_llsamplerange:=0.01
+_maxRange:=0.6" 
+ output="screen"/>
+
+    
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rosbot)/cfg/simulation.rviz"/>
+
+
+</launch>

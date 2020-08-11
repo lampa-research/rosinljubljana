@@ -107,6 +107,15 @@ void Motor::spinOnce()
 
 // Set ---
 
+void Motor::resetSpeedPIDGains()
+{
+    _kp = _default_kp;
+    _ki = _default_ki;
+    _kd = _default_kd;
+
+    return;
+}
+
 void Motor::setVoltage(float u)
 {
     _voltage = u;

@@ -23,11 +23,40 @@ void IRAM_ATTR ISR_R_B()
 Robot::Robot()
 {
     Serial.begin(115200);
+    Wire.begin(SDA, SCL);
+
     pinMode(LED, OUTPUT);
     digitalWrite(LED, HIGH);
 
     motor_left.init(LEFT, true, &ISR_L_A, &ISR_L_B);
     motor_right.init(RIGHT, false, &ISR_R_A, &ISR_R_B);
+}
+
+void Robot::syncSetup()
+{
+    if (eeprom.getMOTOR_PID_CUSTOM("right") == 1)
+    {
+        motor_right.setSpeedPIDGains(eeprom.getMOTOR_P("right"), eeprom.getMOTOR_I("right"), eeprom.getMOTOR_D("right"));
+    }
+    else
+    {
+        motor_right.resetSpeedPIDGains();
+    }
+
+    if (eeprom.getMOTOR_PID_CUSTOM("left") == 1)
+    {
+        motor_left.setSpeedPIDGains(eeprom.getMOTOR_P("left"), eeprom.getMOTOR_I("left"), eeprom.getMOTOR_D("left"));
+    }
+    else
+    {
+        motor_left.resetSpeedPIDGains();
+    }
+
+    //robot.buzzer.beep(2000, 200);
+    //delay(200);
+    //robot.buzzer.beep(2000, 200);
+
+    return;
 }
 
 void Robot::spinOnce()
@@ -36,6 +65,7 @@ void Robot::spinOnce()
     refreshPosition();
     motor_left.spinOnce();
     motor_right.spinOnce();
+    imu.update();
 }
 
 void Robot::setSpeed(float speed_linear, float speed_angular)
@@ -134,42 +164,6 @@ void Robot::refreshPosition()
     }
 }
 
-void Robot::checkSerialCommunication()
-{
-    if (Serial.available() > 0)
-    {
-        char c = Serial.read();
-        if (c == '#')
-        {
-            Serial.flush();
-            robot.eeprom.setup();
-            Serial.println("\nPress # to enter setup or ? to print saved setup.\nPress USER button to continue.\n");
-        }
-        else if (c == '?')
-        {
-            Serial.flush();
-
-            Serial.println("\n--- WiFi data ---\n");
-
-            Serial.print("WiFi SSID: ");
-            Serial.println(robot.eeprom.getSSID());
-            Serial.print("Password: ");
-            Serial.println(robot.eeprom.getPASS());
-            Serial.print("Server IP: ");
-            Serial.println(robot.eeprom.getROSMaster());
-            Serial.flush();
-            Serial.println("\nPress # to enter setup or ? to print saved setup.\nPress USER button to continue.\n");
-        }
-    }
-}
-
-void Robot::initSerialCommunication()
-{
-    Serial.println("\n*** Welcome to ROSin Ljubljana. ***\n");
-    eeprom.init();
-    Serial.println("\nPress # to enter setup or ? to print saved setup.\nPress USER button to continue.\n");
-}
-
 void Robot::setLidarStarted(bool started)
 {
     _lidar_started = started;
@@ -178,6 +172,38 @@ void Robot::setLidarStarted(bool started)
 bool Robot::lidarStarted()
 {
     return _lidar_started;
+}
+
+void Robot::setLidarBacklash(float backlash)
+{
+    _lidar_backlash = backlash;
+}
+
+float Robot::getLidarBacklash()
+{
+    return _lidar_backlash;
+}
+
+void Robot::setLidarAngle(int angle)
+{
+    _lidar_angle = angle;
+}
+
+int Robot::getLidarAngle()
+{
+    return _lidar_angle;
+}
+
+bool Robot::isMoving()
+{
+    if (fabs(getSpeedLinear()) < 0.0001 && fabs(getSpeedAngular()) < 0.0001)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 Robot robot = Robot();

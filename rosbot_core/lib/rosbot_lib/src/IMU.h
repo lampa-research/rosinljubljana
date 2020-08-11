@@ -14,11 +14,10 @@
 #define MPU6050_TEMP_H 0x41
 #define MPU6050_TEMP_L 0x42
 
-class MPU6050
+class IMU
 {
 public:
-    MPU6050(TwoWire &w);
-    MPU6050(TwoWire &w, float aC, float gC);
+    IMU();
 
     void begin();
 
@@ -47,7 +46,7 @@ public:
     float getGyroY() { return gyroY; };
     float getGyroZ() { return gyroZ; };
 
-    void calcGyroOffsets(bool console = false, uint16_t delayBefore = 1000, uint16_t delayAfter = 3000);
+    void calcGyroOffsets(bool console = false);
 
     float getGyroXoffset() { return gyroXoffset; };
     float getGyroYoffset() { return gyroYoffset; };
@@ -67,8 +66,6 @@ public:
     float getAngleZ() { return angleZ; };
 
 private:
-    TwoWire *wire;
-
     int16_t rawAccX, rawAccY, rawAccZ, rawTemp,
         rawGyroX, rawGyroY, rawGyroZ;
 
@@ -84,7 +81,8 @@ private:
     float interval;
     long preInterval;
 
-    float accCoef, gyroCoef;
+    float accCoef = 0.02f;
+    float gyroCoef = 0.98f;
 };
 
 #endif

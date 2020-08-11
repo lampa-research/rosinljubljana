@@ -16,16 +16,16 @@ Lidar::Lidar()
  * 
  * @return int Lidar angle.
  */
-int Lidar::currentPosition()
+int Lidar::currentPosition(int lidar_angle)
 {
     int position = _usToAngle(_dutyToUs(ledcRead(SERVO_CH)));
-    if (position < 90 - LIDAR_TOTAL_ANGLE / 2)
+    if (position < 90 - lidar_angle / 2)
     {
-        position = 90 - LIDAR_TOTAL_ANGLE / 2;
+        position = 90 - lidar_angle / 2;
     }
-    else if (position > 90 + LIDAR_TOTAL_ANGLE / 2)
+    else if (position > 90 + lidar_angle / 2)
     {
-        position = 90 + LIDAR_TOTAL_ANGLE / 2;
+        position = 90 + lidar_angle / 2;
     }
     return position;
 }
@@ -46,14 +46,24 @@ void Lidar::setPosition(int angle)
  * 
  * @param step Angle to rotate, in degrees 0-180.
  */
-void Lidar::nextPosition(int step)
+void Lidar::nextPosition(int lidar_angle, int step)
 {
-    if (_servoVal >= 91 + LIDAR_TOTAL_ANGLE / 2)
+    if (_servoVal >= 91 + lidar_angle / 2)
         _servoDir = -step;
-    else if (_servoVal <= 91 - LIDAR_TOTAL_ANGLE / 2)
+    else if (_servoVal <= 91 - lidar_angle / 2)
         _servoDir = +step;
     _servoVal += _servoDir;
     ledcWrite(SERVO_CH, _usToDuty(_angleToUs(_servoVal)));
+}
+
+void Lidar::setSweepDirection(int sweep_direction)
+{
+    _sweep_direction = sweep_direction;
+}
+
+int Lidar::getSweepDirection()
+{
+    return _sweep_direction;
 }
 
 /**

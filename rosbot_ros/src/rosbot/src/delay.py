@@ -15,7 +15,7 @@ def delayed_callback(msg, event):
     pub.publish(msg)
 
 def callback(msg):
-    timer = rospy.Timer(rospy.Duration(2.0),
+    timer = rospy.Timer(rospy.Duration(2.5),
                         functools.partial(delayed_callback, msg),
                         oneshot=True)
 

@@ -13,7 +13,6 @@
 #include <std_msgs/Header.h>
 
 ros::NodeHandle nh;
-
 sensor_msgs::BatteryState battery_msg;
 ros::Publisher battery_pub("battery", &battery_msg);
 sensor_msgs::LaserScan laserscan_msg;
@@ -22,8 +21,6 @@ nav_msgs::Odometry odometry_msg;
 ros::Publisher odometry_pub("odom", &odometry_msg);
 sensor_msgs::Imu imu_msg;
 ros::Publisher imu_pub("imu", &imu_msg);
-
-MPU6050 imu(Wire);
 
 void twistCb(const geometry_msgs::Twist &msg)
 {
@@ -39,11 +36,18 @@ ros::Subscriber<std_msgs::Bool> lidar_sub("/lidar", &lidarCb);
 
 void setup()
 {
-    robot.initSerialCommunication();
-    while (!robot.button.pressed())
+    robot.setup.init();
+    robot.setup.loop();
+    if (robot.eeprom.getMOTOR_PID_CUSTOM("left"))
     {
-        robot.checkSerialCommunication();
+        robot.motor_left.setSpeedPIDGains(robot.eeprom.getMOTOR_P("left"), robot.eeprom.getMOTOR_I("left"), robot.eeprom.getMOTOR_D("left"));
     }
+    if (robot.eeprom.getMOTOR_PID_CUSTOM("right"))
+    {
+        robot.motor_left.setSpeedPIDGains(robot.eeprom.getMOTOR_P("right"), robot.eeprom.getMOTOR_I("right"), robot.eeprom.getMOTOR_D("right"));
+    }
+    robot.setLidarBacklash(robot.eeprom.getLIDAR_Backlash());
+    robot.setLidarAngle(robot.eeprom.getLIDAR_Angle());
 
     WiFi.begin(robot.eeprom.getSSID().c_str(), robot.eeprom.getPASS().c_str());
     while (WiFi.status() != WL_CONNECTED)
@@ -54,12 +58,7 @@ void setup()
     Serial.print("Connected to the WiFi network. IP: ");
     Serial.println(WiFi.localIP());
 
-    Wire.begin(SDA, SCL);
-    imu = MPU6050(Wire);
-    imu.begin();
-    imu.calcGyroOffsets(true);
-
-    int ros_ip[4] = {0, 0, 0, 0};
+    int ros_ip[4] ={ 0, 0, 0, 0 };
     int i = 0;
     String s = robot.eeprom.getROSMaster();
     char delimiter = '.';
@@ -84,14 +83,14 @@ void setup()
     nh.subscribe(twist_sub);
     nh.subscribe(lidar_sub);
 
-    laserscan_msg.ranges_length = LIDAR_TOTAL_ANGLE + 1;
+    laserscan_msg.ranges_length = robot.getLidarAngle() + 1;
     laserscan_msg.intensities_length = 0;
     laserscan_msg.header.frame_id = "lidar_link";
     laserscan_msg.range_min = 0.08;
     laserscan_msg.range_max = 1.00;
     laserscan_msg.time_increment = 0.010;
     laserscan_msg.scan_time = 0; // laserscan_msg.time_increment * laserscan_msg.ranges_length;
-    laserscan_msg.ranges = (float *)malloc(sizeof(float) * (LIDAR_TOTAL_ANGLE + 1));
+    laserscan_msg.ranges = (float *)malloc(sizeof(float) * (robot.getLidarAngle() + 1));
 
     odometry_msg.header.frame_id = "odom";
     odometry_msg.child_frame_id = "base_link";
@@ -110,65 +109,57 @@ void setup()
     imu_msg.angular_velocity_covariance[8] = 0.1;
 }
 
-ulong loop_time = 0;
+ulong lidar_loop_time = 0;
 ulong update_time = 0;
-ulong last_move_time = 0;
-bool moving = false;
-int sweep_dir = 1;
+bool robot_moved = false;
 
 void loop()
 {
     robot.spinOnce();
-    imu.update();
-    if (fabs(robot.getSpeedLinear()) < 0.0001 && fabs(robot.getSpeedAngular()) < 0.0001)
-    {
-        if (last_move_time - millis() > 10000)
-        {
-            moving = false;
-        }
-    }
-    else
-    {
-        last_move_time = millis();
-        moving = true;
-    }
-
     ulong current_time = millis();
-
-    if (robot.lidarStarted() && current_time - loop_time > laserscan_msg.time_increment * 1000)
+    if (robot.isMoving())
     {
-        loop_time = current_time;
-        int current_position = robot.lidar.currentPosition() - 90 + LIDAR_TOTAL_ANGLE / 2;
-        float distance = robot.lidar.getDistanceAverage(64);
-        robot.lidar.nextPosition(1);
-        if (sweep_dir)
+        robot_moved = true;
+    }
+
+    if (robot.lidarStarted() && current_time - lidar_loop_time > laserscan_msg.time_increment * 1000)
+    {
+        lidar_loop_time = current_time;
+        int current_position = robot.lidar.currentPosition(robot.getLidarAngle()) - 90 + robot.getLidarAngle() / 2;
+        float distance = robot.lidar.getDistanceAverage(32);
+        robot.lidar.nextPosition(robot.getLidarAngle(), 1);
+        if (robot.lidar.getSweepDirection() == 1)
         {
             laserscan_msg.ranges[current_position] = distance;
         }
         else
         {
-            laserscan_msg.ranges[LIDAR_TOTAL_ANGLE - 1 - current_position] = distance;
+            laserscan_msg.ranges[robot.getLidarAngle() - 1 - current_position] = distance;
         }
-        if ((sweep_dir == 1 && current_position >= LIDAR_TOTAL_ANGLE - 1) || (sweep_dir == 0 && current_position <= 0))
+        if ((robot.lidar.getSweepDirection() == 1 && current_position >= robot.getLidarAngle() - 1) || (robot.lidar.getSweepDirection() == 0 && current_position <= 0))
         {
 
-            if (sweep_dir)
+            if (robot.lidar.getSweepDirection() == 1)
             {
-                laserscan_msg.angle_min = -PI * (float)LIDAR_TOTAL_ANGLE / 360.0 - LIDAR_BIAS;
-                laserscan_msg.angle_max = PI * (float)LIDAR_TOTAL_ANGLE / 360.0 - LIDAR_BIAS;
+                laserscan_msg.angle_min = -PI * (float)robot.getLidarAngle() / 360.0 - robot.getLidarBacklash();
+                laserscan_msg.angle_max = PI * (float)robot.getLidarAngle() / 360.0 - robot.getLidarBacklash();
                 laserscan_msg.angle_increment = PI / 180.0;
             }
             else
             {
-                laserscan_msg.angle_min = PI * (float)LIDAR_TOTAL_ANGLE / 360.0 + LIDAR_BIAS;
-                laserscan_msg.angle_max = -PI * (float)LIDAR_TOTAL_ANGLE / 360.0 + LIDAR_BIAS;
+                laserscan_msg.angle_min = PI * (float)robot.getLidarAngle() / 360.0 + robot.getLidarBacklash();
+                laserscan_msg.angle_max = -PI * (float)robot.getLidarAngle() / 360.0 + robot.getLidarBacklash();
                 laserscan_msg.angle_increment = -PI / 180.0;
             }
-            sweep_dir = !sweep_dir;
-            if (!moving)
+            robot.lidar.setSweepDirection(!robot.lidar.getSweepDirection());
+            if (!robot_moved)
             {
                 laserscan_msg.header.stamp = nh.now();
                 laserscan_pub.publish(&laserscan_msg);
+            }
+            else if (robot_moved && !robot.isMoving())
+            {
+                robot_moved = false;
             }
         }
     }
@@ -193,12 +184,12 @@ void loop()
         odometry_pub.publish(&odometry_msg);
 
         imu_msg.header.stamp = nh.now();
-        imu_msg.angular_velocity.x = imu.getGyroY() * PI / 180.0;
-        imu_msg.angular_velocity.y = -imu.getGyroX() * PI / 180.0;
-        imu_msg.angular_velocity.z = imu.getGyroZ() * PI / 180.0;
-        imu_msg.linear_acceleration.x = -imu.getAccY() * 9.81;
-        imu_msg.linear_acceleration.y = imu.getAccX() * 9.81;
-        imu_msg.linear_acceleration.z = imu.getAccZ() * 9.81;
+        imu_msg.angular_velocity.x = robot.imu.getGyroY() * PI / 180.0;
+        imu_msg.angular_velocity.y = -robot.imu.getGyroX() * PI / 180.0;
+        imu_msg.angular_velocity.z = robot.imu.getGyroZ() * PI / 180.0;
+        imu_msg.linear_acceleration.x = -robot.imu.getAccY() * 9.81;
+        imu_msg.linear_acceleration.y = robot.imu.getAccX() * 9.81;
+        imu_msg.linear_acceleration.z = robot.imu.getAccZ() * 9.81;
         imu_pub.publish(&imu_msg);
     }
 

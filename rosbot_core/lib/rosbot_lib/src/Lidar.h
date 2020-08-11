@@ -16,8 +16,10 @@ public:
     float getDistance();
     float getDistanceAverage(int measurements);
     void setPosition(int angle);
-    int currentPosition();
-    void nextPosition(int step);
+    int currentPosition(int lidar_angle);
+    void nextPosition(int lidar_angle, int step);
+    int getSweepDirection();
+    void setSweepDirection(int sweep_direction);
 
 private:
     int _usToDuty(int us) { return map(us, 0, 20000, 0, 65535); }
@@ -30,6 +32,7 @@ private:
     int _servoVal = 0;
     int _servoDir = 1;
     float _adcVal = 0.0f;
+    int _sweep_direction = 1;
 
     struct S_DIST_ADC_MAP
     {

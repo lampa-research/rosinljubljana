@@ -20,6 +20,7 @@ public:
     void setEncoderCountA();
     void setEncoderCountB();
     void setSpeedPIDGains(float kp, float ki, float kd);
+    void resetSpeedPIDGains();
     void setSpeedILimit(float limit);
     int getEncoderCountPosition();
     float getVoltage();
@@ -56,9 +57,14 @@ private:
     //PID
     float _speed_ref = 0.0f;
     float _speed = 0.0f; // m/s
-    float _kp = 10.0f;
-    float _ki = 100.0f;
-    float _kd = 0.001f;
+
+    float _default_kp = 10.0f;
+    float _default_ki = 100.0f;
+    float _default_kd = 0.001f;
+
+    float _kp = _default_kp;
+    float _ki = _default_ki;
+    float _kd = _default_kd;
 
     float _error_integral = 0.0f;
     float _error_integral_limit = _supply_voltage / _ki;

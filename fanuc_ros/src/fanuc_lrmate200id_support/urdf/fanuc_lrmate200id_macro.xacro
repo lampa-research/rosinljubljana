@@ -1,0 +1,471 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <xacro:include filename="$(find fanuc_resources)/urdf/common_materials.xacro" />
+
+  <xacro:macro name="fanuc_lrmate200id" params="prefix">
+    <!-- links: main serial chain -->
+    <link name="${prefix}base_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/visual/base_link.stl" />
+        </geometry>
+        <xacro:material_fanuc_gray28 />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/collision/base_link.stl" />
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="4" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="0.0216667" ixy="0" ixz="0" iyy="0.0216667" iyz="0" izz="0.0240667" />
+      </inertial>
+    </link>
+    <link name="${prefix}link_1">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/visual/link_1.stl" />
+        </geometry>
+        <xacro:material_fanuc_yellow />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/collision/link_1.stl" />
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="4" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="0.0322667" ixy="0" ixz="0" iyy="0.0226667" iyz="0" izz="0.0226667" />
+      </inertial>
+    </link>
+    <link name="${prefix}link_2">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/visual/link_2.stl" />
+        </geometry>
+        <xacro:material_fanuc_yellow />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/collision/link_2.stl" />
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="5" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="0.0973333" ixy="0" ixz="0" iyy="0.0888333" iyz="0" izz="0.0248333" />
+      </inertial>
+    </link>
+    <link name="${prefix}link_3">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/visual/link_3.stl" />
+        </geometry>
+        <xacro:material_fanuc_yellow />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/collision/link_3.stl" />
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="4" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="0.0104333" ixy="0" ixz="0" iyy="0.0121667" iyz="0" izz="0.0113333" />
+      </inertial>
+    </link>
+    <link name="${prefix}link_4">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/visual/link_4.stl" />
+        </geometry>
+        <xacro:material_fanuc_yellow />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/collision/link_4.stl" />
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="5" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="0.00833333" ixy="0" ixz="0" iyy="0.0368333" iyz="0" izz="0.0368333" />
+      </inertial>
+    </link>
+    <link name="${prefix}link_5">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/visual/link_5.stl" />
+        </geometry>
+        <xacro:material_fanuc_yellow />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/collision/link_5.stl" />
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="1.5" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="0.0018125" ixy="0" ixz="0" iyy="0.0023125" iyz="0" izz="0.002525" />
+      </inertial>
+    </link>
+    <link name="${prefix}link_6">
+      <visual>
+        <origin xyz="-0.057 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/visual/link_6.stl" />
+        </geometry>
+        <xacro:material_fanuc_black />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/collision/link_6.stl" />
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.25" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="6.66666e-05" ixy="0" ixz="0" iyy="3.54167e-05" iyz="0" izz="3.54167e-05" />
+      </inertial>
+    </link>
+
+    <link name="${prefix}flange">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh scale="0.001 0.001 0.001" filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/visual/gripper.stl" />
+        </geometry>
+        <xacro:material_fanuc_greyish />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh scale="0.001 0.001 0.001" filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/collision/gripper.stl" />
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.1" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="6e-06" ixy="0" ixz="0" iyy="6e-06" iyz="0" izz="6e-06" />
+      </inertial>
+    </link>
+
+    <link name="${prefix}left_finger">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh scale="0.001 0.001 0.001" filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/visual/left_finger.stl" />
+        </geometry>
+        <xacro:material_fanuc_greyish />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh scale="0.001 0.001 0.001" filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/collision/left_finger.stl" />
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="6e-06" ixy="0" ixz="0" iyy="6e-06" iyz="0" izz="6e-06" />
+      </inertial>
+    </link>
+
+    <link name="${prefix}right_finger">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh scale="0.001 0.001 0.001" filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/visual/right_finger.stl" />
+        </geometry>
+        <xacro:material_fanuc_greyish />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh scale="0.001 0.001 0.001" filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/collision/right_finger.stl" />
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="6e-06" ixy="0" ixz="0" iyy="6e-06" iyz="0" izz="6e-06" />
+      </inertial>
+    </link>
+
+    <!-- joints: main serial chain -->
+    <joint name="${prefix}joint_1" type="revolute">
+      <origin xyz="-0.006 -0.002 0.290" rpy="0 0 0" />
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}link_1" />
+      <axis xyz="0 0 1" />
+      <dynamics damping="1.0" />
+      <limit effort="100" lower="-2.965" upper="2.965" velocity="7.85" />
+    </joint>
+    <joint name="${prefix}joint_2" type="revolute">
+      <origin xyz="0 0 0.040" rpy="0 0 0" />
+      <parent link="${prefix}link_1" />
+      <child link="${prefix}link_2" />
+      <axis xyz="0 1 0" />
+      <dynamics damping="1.0" />
+      <limit effort="100" lower="-1.745329" upper="2.530727" velocity="6.63" />
+    </joint>
+    <joint name="${prefix}joint_3" type="revolute">
+      <origin xyz="0.0 0 0.26" rpy="0 0 0" />
+      <parent link="${prefix}link_2" />
+      <child link="${prefix}link_3" />
+      <axis xyz="0 -1 0" />
+      <dynamics damping="1.0" />
+      <limit effort="100" lower="-2.450966" upper="4.886922" velocity="9.08" />
+    </joint>
+    <joint name="${prefix}joint_4" type="revolute">
+      <origin xyz="0.064 0 0.02" rpy="0 0 0" />
+      <parent link="${prefix}link_3" />
+      <child link="${prefix}link_4" />
+      <axis xyz="-1 0 0" />
+      <dynamics damping="1.0" />
+      <limit effort="100" lower="-3.315" upper="3.315" velocity="9.60" />
+    </joint>
+    <joint name="${prefix}joint_5" type="revolute">
+      <origin xyz="0.226 0 0" rpy="0 0 0" />
+      <parent link="${prefix}link_4" />
+      <child link="${prefix}link_5" />
+      <axis xyz="0 -1 0" />
+      <dynamics damping="1.0" />
+      <limit effort="100" lower="-2.18" upper="2.18" velocity="9.51" />
+    </joint>
+    <joint name="${prefix}joint_6" type="revolute">
+      <origin xyz="0.070 0 0" rpy="0 0 0" />
+      <parent link="${prefix}link_5" />
+      <child link="${prefix}link_6" />
+      <axis xyz="-1 0 0" />
+      <dynamics damping="1.0" />
+      <limit effort="100" lower="-6.285" upper="6.285" velocity="17.45" />
+    </joint>
+
+    <!-- WORLD LINK -->
+    <link name="world" />
+    <joint name="world" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <parent link="world" />
+      <child link="base_link" />
+    </joint>
+
+    <!-- ROS-Industrial 'base' frame: base_link to Fanuc World Coordinates transform -->
+    <!-- <link name="${prefix}base" />
+    <joint name="${prefix}base_link-base" type="fixed">
+      <origin xyz="0 0 0.290" rpy="0 0 0" />
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}base" />
+    </joint> -->
+
+    <!-- ROS-Industrial 'flange' frame: attachment point for EEF models -->
+    <!--<link name="${prefix}flange" />-->
+    <joint name="${prefix}joint_6-flange" type="fixed">
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <parent link="${prefix}link_6" />
+      <child link="${prefix}flange" />
+    </joint>
+
+    <!-- Schunk gripper frame -->
+    <!--<joint name="${prefix}flange-gripper" type="fixed">
+      <origin xyz="0.0 0 0" rpy="0 0 0" />
+      <parent link="${prefix}flange" />
+      <child link="${prefix}gripper" />
+    </joint>-->
+
+    <!-- ROS-Industrial 'tool0' frame: all-zeros tool frame -->
+    <!-- <link name="${prefix}tool0" />
+    <joint name="${prefix}link_6-tool0" type="fixed">
+      <origin xyz="0.13 0 0" rpy="${pi} ${-pi/2.0} 0" />
+      <parent link="${prefix}link_6" />
+      <child link="${prefix}tool0" />
+    </joint> -->
+
+    <joint name="finger_joint1" type="prismatic">
+      <parent link="flange" />
+      <child link="left_finger" />
+      <origin xyz="0.088 0 0" rpy="0 0 0" />
+      <axis xyz="0 -1 0" />
+      <dynamics damping="1.0" />
+      <limit effort="10" lower="0.0" upper="0.015" velocity="0.2" />
+    </joint>
+    <joint name="finger_joint2" type="prismatic">
+      <parent link="flange" />
+      <child link="right_finger" />
+      <origin xyz="0.088 0 0" rpy="0 0 0" />
+      <axis xyz="0 1 0" />
+      <dynamics damping="1.0" />
+      <limit effort="10" lower="0.0" upper="0.015" velocity="0.2" />
+      <mimic joint="finger_joint1" />
+    </joint>
+
+    <!-- MATERIALS GAZEBO -->
+    <gazebo reference="base_link">
+      <material>Gazebo/Grey</material>
+    </gazebo>
+    <gazebo reference="link_1">
+      <material>Gazebo/Yellow</material>
+    </gazebo>
+    <gazebo reference="link_2">
+      <material>Gazebo/Yellow</material>
+    </gazebo>
+    <gazebo reference="link_3">
+      <material>Gazebo/Yellow</material>
+    </gazebo>
+    <gazebo reference="link_4">
+      <material>Gazebo/Yellow</material>
+    </gazebo>
+    <gazebo reference="link_5">
+      <material>Gazebo/Yellow</material>
+    </gazebo>
+    <gazebo reference="link_6">
+      <material>Gazebo/Black</material>
+    </gazebo>
+
+    <gazebo>
+      <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+        <robotNamespace>/fanuc_lrmate200id</robotNamespace>
+        <legacyModeNS>false</legacyModeNS>
+      </plugin>
+    </gazebo>
+
+    <transmission name="tran1">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint_1">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="joint_1_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="tran2">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint_2">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="joint_2_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="tran3">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint_3">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="joint_3_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="tran4">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint_4">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="joint_4_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="tran5">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint_5">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="joint_5_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="tran6">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint_6">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="joint_6_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="trans_finger_joint1">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="finger_joint1">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="finger_joint1_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="trans_finger_joint2">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="finger_joint2">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="finger_joint2_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <gazebo reference="{prefix}link1">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="{prefix}link2">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+    <gazebo reference="{prefix}link3">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+    <gazebo reference="{prefix}link4">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+    <gazebo reference="{prefix}link5">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+    <gazebo reference="{prefix}link6">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+    <gazebo reference="{prefix}left_finger">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+    <gazebo reference="{prefix}right_finger">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+  </xacro:macro>
+</robot>

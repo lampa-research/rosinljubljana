@@ -1,8 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <!-- START GAZEBO -->
-    <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+    <!-- <include file="$(find gazebo_ros)/launch/empty_world.launch"/>-->
+     <env name="GAZEBO_MODEL_PATH" value="$(find rosbot)/media/models:$(optenv GAZEBO_MODEL_PATH)"/>
+    <!-- launch the simulator world -->
+    <arg name="debug" default="false"/>
+    <arg name="gui" default="true"/>
+    <arg name="headless" default="false"/>
+    <arg name="pause" default="false"/>
+    <arg name="world" default="simulation" />
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find rosbot)/worlds/$(arg world).world"/>
+        <arg name="debug" value="$(arg debug)" />
+        <arg name="gui" value="$(arg gui)" />
+        <arg name="paused" value="$(arg pause)"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="headless" value="$(arg headless)"/>
+        <arg name="verbose" value="true"/>
+    </include>
+    
     <!-- SPAWN ROBOT -->
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find rosbot)/urdf/robot.xacro'"/>
     <node name="robot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model rosbot -x 0 -y 0 -z 0"/>
+
+
+
+
+    <!-- Robot state publisher--> -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+        <param name="use_tf_static" value="false"/>
+    </node>
+    
+    
+    <!-- move_base node -->
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find rosbot)/cfg/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+        <param name="global_costmap/scan/sensor_frame" type="str" value="lidar_link"/>
+        <param name="global_costmap/scan/topic" type="str" value="scan"/>
+
+        <rosparam file="$(find rosbot)/cfg/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+        <param name="local_costmap/scan/sensor_frame" type="str" value="lidar_link"/>
+        <param name="local_costmap/scan/topic" type="str" value="scan"/>
+
+        <rosparam file="$(find rosbot)/cfg/local_costmap_params.yaml" command="load"/>
+        <param name="local_costmap/global_frame" type="str" value="odom"/>
+        <param name="local_costmap/robot_base_frame" type="str" value="base_link"/>
+
+        <rosparam file="$(find rosbot)/cfg/global_costmap_params.yaml" command="load"/>
+        <param name="global_costmap/global_frame" type="str" value="map" />
+        <param name="global_costmap/robot_base_frame" type="str" value="base_link"/>
+
+        <rosparam file="$(find rosbot)/cfg/base_local_planner_params.yaml" command="load"/>
+
+        <rosparam file="$(find rosbot)/cfg/move_base_params.yaml" command="load"/>
+    </node>
+    
+    
+    
+    <!-- Align map and odom frames -->
+    <!-- <node pkg="tf" type="static_transform_publisher" name="odom_publisher_map_map" args="0 0 0 0 0 0 1 map map 100" />-->
+    <node pkg="tf" type="static_transform_publisher" name="odom_publisher_map_odom" args="0 0 0 0 0 0 1 map odom 100" />
+    
 </launch>

@@ -1,0 +1,29 @@
+shutdown_costmaps: false
+
+controller_frequency: 3.0
+controller_patience: 2.0
+
+planner_frequency: 1.0
+planner_patience: 5.0
+
+oscillation_timeout: 10.0
+oscillation_distance: 0.2
+
+# recovery_behaviors:
+#   - name: 'first_reset'
+#     type: 'clear_costmap_recovery/ClearCostmapRecovery'
+#   - name: 'stepback_and_rotate_recovery'
+#     type: 'stepback_and_rotate_recovery/StepbackAndRotateRecovery'
+#   - name: 'second_reset'
+#     type: 'clear_costmap_recovery/ClearCostmapRecovery'
+#   - name: 'super_conservative_reset'
+#     type: 'clear_costmap_recovery/ClearCostmapRecovery'
+#   - name: 'conservative_reset'
+#     type: 'clear_costmap_recovery/ClearCostmapRecovery'
+#   - name: 'aggressive_reset'
+#     type: 'clear_costmap_recovery/ClearCostmapRecovery'
+#   - name: 'move_slow_and_clear'
+#     type: 'move_slow_and_clear/MoveSlowAndClear'
+
+# local planner - default is trajectory rollout
+# base_local_planner: "dwa_local_planner/DWAPlannerROS"
