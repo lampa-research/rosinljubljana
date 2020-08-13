@@ -266,36 +266,12 @@
       <child link="base_link" />
     </joint>
 
-    <!-- ROS-Industrial 'base' frame: base_link to Fanuc World Coordinates transform -->
-    <!-- <link name="${prefix}base" />
-    <joint name="${prefix}base_link-base" type="fixed">
-      <origin xyz="0 0 0.290" rpy="0 0 0" />
-      <parent link="${prefix}base_link" />
-      <child link="${prefix}base" />
-    </joint> -->
-
     <!-- ROS-Industrial 'flange' frame: attachment point for EEF models -->
-    <!--<link name="${prefix}flange" />-->
     <joint name="${prefix}joint_6-flange" type="fixed">
       <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       <parent link="${prefix}link_6" />
       <child link="${prefix}flange" />
     </joint>
-
-    <!-- Schunk gripper frame -->
-    <!--<joint name="${prefix}flange-gripper" type="fixed">
-      <origin xyz="0.0 0 0" rpy="0 0 0" />
-      <parent link="${prefix}flange" />
-      <child link="${prefix}gripper" />
-    </joint>-->
-
-    <!-- ROS-Industrial 'tool0' frame: all-zeros tool frame -->
-    <!-- <link name="${prefix}tool0" />
-    <joint name="${prefix}link_6-tool0" type="fixed">
-      <origin xyz="0.13 0 0" rpy="${pi} ${-pi/2.0} 0" />
-      <parent link="${prefix}link_6" />
-      <child link="${prefix}tool0" />
-    </joint> -->
 
     <joint name="finger_joint1" type="prismatic">
       <parent link="flange" />
@@ -335,137 +311,7 @@
       <material>Gazebo/Yellow</material>
     </gazebo>
     <gazebo reference="link_6">
-      <material>Gazebo/Black</material>
+      <material>Gazebo/Grey</material>
     </gazebo>
-
-    <gazebo>
-      <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-        <robotNamespace>/fanuc_lrmate200id</robotNamespace>
-        <legacyModeNS>false</legacyModeNS>
-      </plugin>
-    </gazebo>
-
-    <transmission name="tran1">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="joint_1">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="joint_1_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <transmission name="tran2">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="joint_2">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="joint_2_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <transmission name="tran3">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="joint_3">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="joint_3_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <transmission name="tran4">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="joint_4">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="joint_4_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <transmission name="tran5">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="joint_5">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="joint_5_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <transmission name="tran6">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="joint_6">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="joint_6_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <transmission name="trans_finger_joint1">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="finger_joint1">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="finger_joint1_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <transmission name="trans_finger_joint2">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="finger_joint2">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="finger_joint2_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <gazebo reference="{prefix}link1">
-      <mu1>0.61</mu1>
-      <mu2>0.61</mu2>
-    </gazebo>
-
-    <gazebo reference="{prefix}link2">
-      <mu1>0.61</mu1>
-      <mu2>0.61</mu2>
-    </gazebo>
-    <gazebo reference="{prefix}link3">
-      <mu1>0.61</mu1>
-      <mu2>0.61</mu2>
-    </gazebo>
-    <gazebo reference="{prefix}link4">
-      <mu1>0.61</mu1>
-      <mu2>0.61</mu2>
-    </gazebo>
-    <gazebo reference="{prefix}link5">
-      <mu1>0.61</mu1>
-      <mu2>0.61</mu2>
-    </gazebo>
-    <gazebo reference="{prefix}link6">
-      <mu1>0.61</mu1>
-      <mu2>0.61</mu2>
-    </gazebo>
-    <gazebo reference="{prefix}left_finger">
-      <mu1>0.61</mu1>
-      <mu2>0.61</mu2>
-    </gazebo>
-    <gazebo reference="{prefix}right_finger">
-      <mu1>0.61</mu1>
-      <mu2>0.61</mu2>
-    </gazebo>
-
   </xacro:macro>
 </robot>

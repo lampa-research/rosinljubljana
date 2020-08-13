@@ -2,3 +2,5 @@ rosbot_core/.vscode/extensions.json
 rosbot_ros/build
 rosbot_ros/devel
 rosbot_core/.vscode/*
+fanuc_ros/build
+fanuc_ros/devel

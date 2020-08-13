@@ -22,6 +22,19 @@ hardware_interface:
 joint_state_controller:
   type: joint_state_controller/JointStateController
   publish_rate: 50
+
+
+fanuc_arm_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - joint_1
+    - joint_2
+    - joint_3
+    - joint_4
+    - joint_5
+    - joint_6
+  state_publish_rate: 100
+
 controller_list:
   - name: fanuc_arm_controller
     action_ns: follow_joint_trajectory
