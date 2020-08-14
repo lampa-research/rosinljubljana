@@ -1,0 +1,12 @@
+WORKING WITH MOBILE ROBOT:
+- install Platformio extension in VSC
+- connect the robot via USB cable
+- 
+
+
+WORKING WITH ROBOT SIMULATION (rosbot_ros)
+- install move_base and map_server
+sudo apt-get update
+sudo apt-get install ros-melodic-move-base ros-melodic-map-server
+
+fanuc_driver, fanuc_resources z githuba
