@@ -67,4 +67,6 @@
     <arg name="moveit_warehouse_database_path" value="$(arg db_path)"/>
   </include>
 
+  <node name="gripper" pkg="schunk_gripper_controller" type="gripper_node" output="screen"/>
+
 </launch>
