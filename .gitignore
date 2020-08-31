@@ -4,3 +4,4 @@ rosbot_ros/devel
 rosbot_core/.vscode/*
 fanuc_ros/build
 fanuc_ros/devel
+.vscode

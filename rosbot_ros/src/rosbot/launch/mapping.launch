@@ -6,9 +6,13 @@
     <remap from="mouse_vel" to="cmd_vel"/>
     <node name="mouse_teleop" pkg="mouse_teleop" type="mouse_teleop.py" output="screen"/>
     <!-- TF SETUP -->
-    <node name="lidartf" pkg="tf" type="static_transform_publisher" args="0.054 0 0 0 0 0 1 base_link lidar_link 200" output="screen"/>
+    <node name="lidartf" pkg="tf" type="static_transform_publisher" args="0.054 0 0.035 0 0 0 1 base_link lidar_link 200" output="screen"/>
     <node name="imutf" pkg="tf" type="static_transform_publisher" args="0.080 0 0 0 0 0 1 base_link imu_link 200" output="screen"/>
-    <node name="odom2tf" pkg="rosbot" type="odom2tf" output="screen"/>
+    <node name="lwheeltf" pkg="tf" type="static_transform_publisher" args="0 0.04 0 0 0 0 1 base_link left_wheel_link 200" output="screen"/>
+    <node name="rwheeltf" pkg="tf" type="static_transform_publisher" args="0 -0.04 0 0 0 0 1 base_link right_wheel_link 200" output="screen"/>
+    <node name="odom2tf_delayed" pkg="rosbot" type="odom2tf" output="screen">
+        <param name="odom_frame" value="odom_delayed" />
+    </node>
     <node name="delay" pkg="rosbot" type="delay.py" output="screen"/>
     <!-- MAPPING SETUP -->
     <node name="gmapping" pkg="gmapping" type="slam_gmapping" output="screen">
@@ -45,5 +49,6 @@
     </node>
     <!-- GUI -->
     <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui" output="screen" args = "--perspective-file $(find rosbot)/cfg/rqt_gui.perspective"/>
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find rosbot)/urdf/robot.xacro'"/>
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rosbot)/cfg/mapping.rviz" output="screen"/>
 </launch>

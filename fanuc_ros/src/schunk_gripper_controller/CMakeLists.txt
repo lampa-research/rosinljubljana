@@ -3,6 +3,7 @@ project(schunk_gripper_controller)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
+set(CURL_LIBRARY "-lcurl") 
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -13,6 +14,8 @@ find_package(catkin REQUIRED
   std_msgs
   std_srvs
 )
+
+find_package(CURL REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -117,8 +120,9 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
+  ${CURL_INCLUDE_DIR}
 )
 
 ## Declare a C++ library
@@ -149,6 +153,7 @@ add_dependencies(gripper_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPOR
 ## Specify libraries to link a library or executable target against
 target_link_libraries(gripper_node
   ${catkin_LIBRARIES}
+  ${CURL_LIBRARIES}
 )
 
 #############

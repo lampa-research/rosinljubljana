@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="triglav" 
+<robot name="triglav"
     xmlns:xacro="http://www.ros.org/wiki/xacro">
     <!-- CYLINDER INERTIA -->
     <xacro:macro name="cylinder_inertia" params="mass r l">
@@ -35,4 +35,12 @@
     <!-- WHEEL JOINT -->
     <xacro:property name="motor_damping" value="0.000" />
     <xacro:property name="motor_friction" value="0.00000" />
+
+    <material name="gray">
+        <color rgba="0.2 0.2 0.2 1"/>
+    </material>
+
+    <material name="green">
+        <color rgba="0.2 0.8 0.2 1"/>
+    </material>
 </robot>

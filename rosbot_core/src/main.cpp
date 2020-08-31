@@ -175,6 +175,7 @@ void loop()
         odometry_msg.header.stamp = nh.now();
         odometry_msg.pose.pose.position.x = robot.getPositionX();
         odometry_msg.pose.pose.position.y = robot.getPositionY();
+        odometry_msg.pose.pose.position.z = 0.016;
         odometry_msg.pose.pose.orientation.w = cos(0.5 * robot.getRotation());
         odometry_msg.pose.pose.orientation.x = 0;
         odometry_msg.pose.pose.orientation.y = 0;
