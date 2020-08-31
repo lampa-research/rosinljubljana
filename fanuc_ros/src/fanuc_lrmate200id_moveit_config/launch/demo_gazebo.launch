@@ -57,9 +57,10 @@
   </include>  
 
   <!-- Run Rviz and load the default config to see the state of the move_group node -->
+  <arg name="rviz_config_file" default="$(find fanuc_lrmate200id_moveit_config)/launch/moveit.rviz"/>
   <include file="$(find fanuc_lrmate200id_moveit_config)/launch/moveit_rviz.launch">
-    <arg name="rviz_config" value="$(find fanuc_lrmate200id_moveit_config)/launch/moveit.rviz"/>
-    <arg name="debug" value="$(arg debug)"/>
+    <arg name="rviz_config" value="$(arg rviz_config_file)"/>
+    <arg name="debug" value="$(arg debug)"/>  
   </include>
 
   <!-- If database loading was enabled, start mongodb as well -->
