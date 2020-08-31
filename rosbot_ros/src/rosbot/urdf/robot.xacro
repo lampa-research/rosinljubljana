@@ -214,7 +214,8 @@
         <sensor type="gpu_ray" name="head_hokuyo_sensor">
             <pose>0 0 0 0 0 0</pose>
             <visualize>true</visualize>
-            <update_rate>1</update_rate>
+            <!--  <update_rate>1</update_rate>  -->
+            <update_rate>10</update_rate>
             <ray>
                 <scan>
                     <horizontal>
@@ -226,7 +227,8 @@
                 </scan>
                 <range>
                     <min>0.05</min>
-                    <max>0.55</max>
+                    <!--  <max>0.55</max>  -->
+                    <max>2.0</max>
                     <resolution>0.001</resolution>
                 </range>
                 <noise>

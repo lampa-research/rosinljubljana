@@ -313,5 +313,38 @@
     <gazebo reference="link_6">
       <material>Gazebo/Grey</material>
     </gazebo>
+    <gazebo reference="{prefix}link1">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="{prefix}link2">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+    <gazebo reference="{prefix}link3">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+    <gazebo reference="{prefix}link4">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+    <gazebo reference="{prefix}link5">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+    <gazebo reference="{prefix}link6">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+    <gazebo reference="{prefix}left_finger">
+      <mu1>1.00</mu1>
+      <mu2>1.00</mu2>
+    </gazebo>
+    <gazebo reference="{prefix}right_finger">
+      <mu1>1.00</mu1>
+      <mu2>1.00</mu2>
+    </gazebo>
   </xacro:macro>
 </robot>
