@@ -29,7 +29,7 @@ Robot::Robot()
     digitalWrite(LED, HIGH);
 
     motor_left.init(LEFT, true, &ISR_L_A, &ISR_L_B);
-    motor_right.init(RIGHT, false, &ISR_R_A, &ISR_R_B);
+    motor_right.init(RIGHT, true, &ISR_R_A, &ISR_R_B);
 }
 
 void Robot::syncSetup()

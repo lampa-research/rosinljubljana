@@ -2,7 +2,7 @@
 <launch>
     <!-- START GAZEBO -->
     <!-- <include file="$(find gazebo_ros)/launch/empty_world.launch"/>-->
-     <env name="GAZEBO_MODEL_PATH" value="$(find rosbot)/media/models:$(optenv GAZEBO_MODEL_PATH)"/>
+    <env name="GAZEBO_MODEL_PATH" value="$(find rosbot)/media/models:$(optenv GAZEBO_MODEL_PATH)"/>
     <!-- launch the simulator world -->
     <arg name="debug" default="false"/>
     <arg name="gui" default="true"/>
@@ -18,7 +18,7 @@
         <arg name="headless" value="$(arg headless)"/>
         <arg name="verbose" value="true"/>
     </include>
-    
+
     <!-- SPAWN ROBOT -->
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find rosbot)/urdf/robot.xacro'"/>
     <node name="robot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model rosbot -x 0 -y 0 -z 0"/>
@@ -30,8 +30,8 @@
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
         <param name="use_tf_static" value="false"/>
     </node>
-    
-    
+
+
     <!-- move_base node -->
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
         <rosparam file="$(find rosbot)/cfg/costmap_common_params.yaml" command="load" ns="global_costmap"/>
@@ -54,11 +54,11 @@
 
         <rosparam file="$(find rosbot)/cfg/move_base_params.yaml" command="load"/>
     </node>
-    
-    
-    
+
+
+
     <!-- Align map and odom frames -->
     <!-- <node pkg="tf" type="static_transform_publisher" name="odom_publisher_map_map" args="0 0 0 0 0 0 1 map map 100" />-->
     <node pkg="tf" type="static_transform_publisher" name="odom_publisher_map_odom" args="0 0 0 0 0 0 1 map odom 100" />
-    
+
 </launch>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="rosbot" 
+<robot name="rosbot"
     xmlns:xacro="http://www.ros.org/wiki/xacro">
     <!-- INCLUDES -->
     <xacro:include filename="$(find rosbot)/urdf/parameters.xacro" />
@@ -25,6 +25,7 @@
             <geometry>
                 <box size="${base_size_x} ${base_size_y} ${base_size_z}"/>
             </geometry>
+            <material name="green"/>
         </visual>
         <!-- caster front -->
         <collision name="caster_front_collision">
@@ -55,6 +56,7 @@
             <geometry>
                 <sphere radius="${wheel_radius/2}"/>
             </geometry>
+            <material name="gray"/>
         </visual>
     </link>
     <!-- LEFT WHEEL LINK -->
@@ -91,6 +93,7 @@
             <geometry>
                 <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
             </geometry>
+            <material name="gray"/>
         </visual>
     </link>
     <!-- LEFT WHEEL JOINT -->
@@ -135,6 +138,7 @@
             <geometry>
                 <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
             </geometry>
+            <material name="gray"/>
         </visual>
     </link>
     <!-- RIGHT WHEEL JOINT -->
