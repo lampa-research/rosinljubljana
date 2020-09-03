@@ -1,0 +1,9 @@
+<launch>
+  <include file="$(find fanuc_lrmate200id_moveit_config)/launch/demo_gazebo.launch">
+    <arg name="rviz_config_file" value="$(find manipulation)/launch/manipulation.rviz"/>
+  </include>
+
+  <node name="move_group_one" pkg="manipulation" type="move_group_one" respawn="false" output="screen">
+  </node>
+
+</launch>
