@@ -1,7 +1,7 @@
 WORKING WITH MOBILE ROBOT:
 - install Platformio extension in VSC
 - connect the robot via USB cable
-- 
+- upload_port = /dev/ttyUSB0 in Platformio
 
 
 WORKING WITH ROBOT SIMULATION (rosbot_ros)
@@ -9,4 +9,6 @@ WORKING WITH ROBOT SIMULATION (rosbot_ros)
 sudo apt-get update
 sudo apt-get install ros-melodic-move-base ros-melodic-map-server
 
-fanuc_driver, fanuc_resources z githuba
+IF graph_msgs ARE MISSING
+sudo apt-get update
+SUdo apt-get install ros-melodic-graph-msgs
