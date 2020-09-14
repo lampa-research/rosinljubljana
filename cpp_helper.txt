@@ -1,1 +1,0 @@
-std::cout << trajectory.joint_trajectory << std::endl; // ros message printout
