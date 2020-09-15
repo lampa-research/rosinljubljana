@@ -60,7 +60,7 @@
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
-  <build_export_depend>stf2_eigen</build_export_depend>
+  <build_export_depend>tf2_eigen</build_export_depend>
   <build_export_depend>moveit_visual_tools</build_export_depend>
   <build_export_depend>moveit_ros_planning</build_export_depend>
   <build_export_depend>moveit_ros_planning_interface</build_export_depend>
