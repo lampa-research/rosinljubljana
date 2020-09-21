@@ -1,0 +1,12 @@
+<launch>
+    <include file="$(find fanuc_lrmate200id_moveit_config)/launch/demo_gazebo.launch"/>
+
+    <param name="camera_description" command="$(find xacro)/xacro --inorder '$(find camera_exercise)/urdf/camera.xacro'"/>
+    <node name="camera_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param camera_description -model camera -x 0 -y 0 -z 0"/>
+
+    <param name="box_description" command="cat '$(find camera_exercise)/urdf/box.urdf'"/>
+    <node name="box_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param box_description -model box -x 0.2 -y 0.3 -z 0.1"/>
+
+    <node name="image_processing" pkg="camera_exercise" type="image_processing" output="screen"/>
+
+</launch>

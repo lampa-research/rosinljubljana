@@ -119,8 +119,8 @@ int main(int argc, char **argv)
     n.param<string>("io_idx", io_idx, "8");
     n.param<bool>("sim", sim, false);
 
-    f1_pub = n.advertise<std_msgs::Float64>("finger_joint1_controller/command", 1000);
-    f2_pub = n.advertise<std_msgs::Float64>("finger_joint2_controller/command", 1000);
+    f1_pub = n.advertise<std_msgs::Float64>("/finger_joint1_controller/command", 1000);
+    f2_pub = n.advertise<std_msgs::Float64>("/finger_joint2_controller/command", 1000);
     ros::ServiceServer service = n.advertiseService("gripper_closed", gripper);
     ros::spin();
 
