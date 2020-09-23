@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: urdf_exercise
+    relative_path: urdf/fanuc_lrmate200id.urdf
+    xacro_args: ""
+  SRDF:
+    relative_path: config/fanuc_lrmate200id.srdf
+  CONFIG:
+    author_name: ROSIN Ljubljana
+    author_email: andreja.malus@fs.uni-lj.si
+    generated_timestamp: 1600343885

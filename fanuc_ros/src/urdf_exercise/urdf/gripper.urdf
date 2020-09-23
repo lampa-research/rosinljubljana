@@ -1,0 +1,85 @@
+<robot name="gripper">
+    <link name="flange">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/visual/gripper.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.75 0.75 0.75 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/collision/gripper.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="6e-06" ixy="0" ixz="0" iyy="6e-06" iyz="0" izz="6e-06"/>
+    </inertial>
+  </link>
+  <link name="left_finger">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/visual/left_finger.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.75 0.75 0.75 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/collision/left_finger.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.01"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="6e-06" ixy="0" ixz="0" iyy="6e-06" iyz="0" izz="6e-06"/>
+    </inertial>
+  </link>
+  <link name="right_finger">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/visual/right_finger.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.75 0.75 0.75 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://fanuc_lrmate200id_support/meshes/lrmate200id/collision/right_finger.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.01"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="6e-06" ixy="0" ixz="0" iyy="6e-06" iyz="0" izz="6e-06"/>
+    </inertial>
+  </link>
+  <joint name="finger_joint1" type="prismatic">
+    <parent link="flange"/>
+    <child link="left_finger"/>
+    <origin rpy="0 0 0" xyz="0.088 0 0"/>
+    <axis xyz="0 -1 0"/>
+    <dynamics damping="1.0"/>
+    <limit effort="10" lower="0.0" upper="0.015" velocity="0.2"/>
+  </joint>
+  <joint name="finger_joint2" type="prismatic">
+    <parent link="flange"/>
+    <child link="right_finger"/>
+    <origin rpy="0 0 0" xyz="0.088 0 0"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="1.0"/>
+    <limit effort="10" lower="0.0" upper="0.015" velocity="0.2"/>
+    <mimic joint="finger_joint1"/>
+  </joint>
+</robot>

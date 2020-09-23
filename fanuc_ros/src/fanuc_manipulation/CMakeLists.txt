@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(manipulation)
+project(fanuc_manipulation)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,18 +8,16 @@ project(manipulation)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  rospy
-  std_msgs
-  moveit_visual_tools
   moveit_ros_planning
   moveit_ros_planning_interface
+  moveit_visual_tools
+  roscpp
+  std_msgs
   tf2_eigen
 )
 
 ## System dependencies are found with CMake's conventions
-find_package(Eigen3 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system)
+# find_package(Boost REQUIRED COMPONENTS system)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -109,14 +107,9 @@ find_package(Boost REQUIRED COMPONENTS system)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES manipulation
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+#  LIBRARIES fanuc_manipulation
+#  CATKIN_DEPENDS moveit_ros_planning moveit_ros_planning_interface moveit_visual_tools roscpp std_msgs tf2_eigen
 #  DEPENDS system_lib
-  CATKIN_DEPENDS
-    moveit_visual_tools
-    moveit_ros_planning_interface
-  DEPENDS
-    EIGEN3
 )
 
 ###########
@@ -132,7 +125,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/manipulation.cpp
+#   src/${PROJECT_NAME}/fanuc_manipulation.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -143,8 +136,12 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/manipulation_node.cpp)
-add_executable(move_group_one src/move_group_one.cpp)
+# add_executable(${PROJECT_NAME}_node src/fanuc_manipulation_node.cpp)
+add_executable(move_to_pose src/move_to_pose.cpp)
+add_executable(move_to_pose_interactive src/move_to_pose_interactive.cpp)
+add_executable(move_joints src/move_joints.cpp)
+add_executable(avoid_collision src/avoid_collision.cpp)
+add_executable(move_cartesian src/move_cartesian.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -160,7 +157,11 @@ add_executable(move_group_one src/move_group_one.cpp)
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-target_link_libraries(move_group_one ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(move_to_pose ${catkin_LIBRARIES})
+target_link_libraries(move_to_pose_interactive ${catkin_LIBRARIES})
+target_link_libraries(move_joints ${catkin_LIBRARIES})
+target_link_libraries(avoid_collision ${catkin_LIBRARIES})
+target_link_libraries(move_cartesian ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -181,9 +182,6 @@ target_link_libraries(move_group_one ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 # install(TARGETS ${PROJECT_NAME}_node
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
-install (TARGETS move_group_one
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
 
 ## Mark libraries for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
@@ -212,7 +210,7 @@ install (TARGETS move_group_one
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_manipulation.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_fanuc_manipulation.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

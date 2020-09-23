@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot  xmlns:xacro="http://ros.org/wiki/xacro" name="link_one">
+  <xacro:macro name="attachment" params="connected_to">
+  <link name="link_one">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.75" />
+      <geometry>
+        <box size="0.5 0.5 1.5"/> 
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
+  <joint name="connection_joint" type="revolute">
+    <parent link="${connected_to}"/>
+    <child link="link_one"/>
+    <origin xyz="0.0 0.0 1.5" />
+    <limit lower="-1.0" upper="1.0" effort="1000.0" velocity="0.5"/>
+  </joint>
+  </xacro:macro>
+</robot>

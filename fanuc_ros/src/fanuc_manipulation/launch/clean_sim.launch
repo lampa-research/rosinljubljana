@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find fanuc_lrmate200id_moveit_config)/launch/demo_gazebo.launch">
+        <arg name="rviz_config_file" value="$(find fanuc_manipulation)/launch/movement.rviz"/>
+    </include>
+</launch>

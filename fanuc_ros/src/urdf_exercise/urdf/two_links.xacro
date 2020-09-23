@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="two_links_robot">
+  <!-- base_link -->
+  <xacro:include filename="$(find urdf_exercise)/urdf/base_link.urdf" />
+  <!-- attachment -->
+  <xacro:include filename="$(find urdf_exercise)/urdf/attachment.xacro" />
+  <xacro:attachment connected_to="base_link"/>
+</robot>
